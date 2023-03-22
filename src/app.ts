@@ -1,6 +1,9 @@
+import { loadEnv } from "@/config";
 import cors from "cors";
 import express from "express";
 import "express-async-errors";
+
+loadEnv();
 
 const app = express();
 
