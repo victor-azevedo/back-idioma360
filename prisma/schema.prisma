@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  fullName  String    @db.VarChar(255)
+  birthday  DateTime  @db.Date
+  email     String    @unique @db.VarChar(255)
+  phone     String    @unique @db.VarChar(14)
+  cpf       String    @unique @db.VarChar(14)
+  addressId Int       @unique
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  userAuth    UserAuth?
+  userSession UserSession[]
+  enrolment   Enrollment?
+  address     Address @relation(fields: [addressId], references: [id])
+
+  @@map("users")
+}
+
+model UserAuth {
+  id        Int       @id @default(autoincrement())
+  userEmail String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(16)
+  user      User      @relation(fields: [userEmail], references: [email])
+
+  @@map("userAuths")
+}
+
+model UserSession {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  token     String    @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@map("userSessions")
+}
+
+model Address {
+  id         Int      @id @default(autoincrement())
+  street     String   @db.VarChar(255)
+  number     String   @db.VarChar(255)
+  complement String?  @db.VarChar(255)
+  district   String   @db.VarChar(255)
+  postalCode String   @db.VarChar(9)
+  cityId     Int
+  createdAt  DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  user       User?
+  city       City     @relation(fields: [cityId], references: [id])
+
+  @@map("address")
+}
+
+model City {
+  id      Int       @id
+  name    String    @db.VarChar(255)
+  stateId Int
+  address Address[]
+  state   State     @relation(fields: [stateId], references: [id])
+
+  @@map("cities")
+}
+
+model State {
+  id   Int     @id
+  name String  @db.VarChar(255)
+  uf   StateUF
+  city City[]
+
+  @@map("states")
+}
+
+model Enrollment {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @unique
+  offeringId  Int       @unique
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  offering    Offering  @relation(fields: [offeringId], references: [id])
+
+  @@map("enrollments")
+}
+
+model Offering {
+  id          Int       @id @default(autoincrement())
+  startDate   DateTime  @db.Date
+  endDate     DateTime  @db.Date
+  testDate    DateTime  @db.Date
+  testStartTime DateTime  @db.Time()
+  testEndTime   DateTime  @db.Time()
+  resultDate  DateTime  @db.Date
+  classeId    Int       @unique
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  enrolment   Enrollment?
+  classe      Classe    @relation(fields: [classeId], references: [id])
+
+  @@map("offerings")
+}
+
+model Classe {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  days      WeekDay[]
+  startTime DateTime  @db.Time()
+  endTime   DateTime  @db.Time()
+  startDate DateTime  @db.Date
+  endDate   DateTime  @db.Date
+  courseId  Int
+  createdAt DateTime  @default(now())
+  updateAt  DateTime  @updatedAt
+  offering  Offering?
+  course    Course    @relation(fields: [courseId], references: [id])
+
+  @@map("classes")
+}
+
+model Course {
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  description String     @db.Text
+  creditHours Int        @db.Integer
+  createdAt   DateTime   @default(now())
+  updateAt    DateTime   @updatedAt
+  class       Classe[]
+
+  @@map("courses")
+}
+
+enum StateUF {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MS
+  MT
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
+enum WeekDay {
+  Sunday
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+}
+
