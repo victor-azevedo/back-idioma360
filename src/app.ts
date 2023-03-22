@@ -1,9 +1,11 @@
-import { loadEnv } from "@/config";
+import { loadEnv, redisConnect } from "@/config";
 import cors from "cors";
 import express from "express";
 import "express-async-errors";
 
 loadEnv();
+
+redisConnect();
 
 const app = express();
 
