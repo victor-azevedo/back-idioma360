@@ -121,6 +121,7 @@ model Classe {
   endTime   DateTime  @db.Time()
   startDate DateTime  @db.Date
   endDate   DateTime  @db.Date
+  vacancies Int
   courseId  Int
   createdAt DateTime  @default(now())
   updateAt  DateTime  @updatedAt
@@ -137,7 +138,7 @@ model Course {
   creditHours Int        @db.Integer
   createdAt   DateTime   @default(now())
   updateAt    DateTime   @updatedAt
-  class       Classe[]
+  classe      Classe[]
 
   @@map("courses")
 }
