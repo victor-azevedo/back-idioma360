@@ -7,15 +7,13 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:boundaries/recommended",
-    "prettier",
-    "plugin:prettier/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "boundaries", "prettier"],
+  plugins: ["@typescript-eslint", "boundaries"],
   settings: {
     "import/resolver": {
       typescript: {
