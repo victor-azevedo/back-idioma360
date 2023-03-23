@@ -8,8 +8,8 @@ export async function signUp(req: Request, res: Response) {
   const newUser = req.body as SignUpBody;
 
   try {
-    const userInserted = await usersService.signUp(newUser);
-    return res.status(httpStatus.CREATED).send(userInserted);
+    await usersService.signUp(newUser);
+    return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     handleRequestError(error, res);
   }
