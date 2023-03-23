@@ -20,7 +20,7 @@ export async function signIn(req: Request, res: Response) {
 
   try {
     const token = await usersService.signIn(userSignInBody);
-    return res.status(httpStatus.OK).send(token);
+    return res.status(httpStatus.OK).send({ token });
   } catch (error) {
     handleRequestError(error, res);
   }
