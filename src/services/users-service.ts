@@ -1,8 +1,9 @@
-import { conflictError, unprocessableEntityError } from "@/errors";
+import { conflictError, notFoundError, unauthorizedError, unprocessableEntityError } from "@/errors";
 import { isValidCPF } from "@/helpers";
-import { usersAuthRepository, usersRepository } from "@/repositories";
-import { SignUpBody } from "@/schemas";
+import { usersAuthRepository, userSessionsRepository, usersRepository } from "@/repositories";
+import { SignInBody, SignUpBody } from "@/schemas";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 async function signUp(params: SignUpBody) {
   const { password, ...userData } = params;
@@ -37,6 +38,38 @@ async function signUp(params: SignUpBody) {
   return;
 }
 
+async function signIn(params: SignInBody) {
+  const { email, password } = params;
+
+  const userCredentials = await getUserOrFail(email);
+
+  await validatePasswordOrFail(password, userCredentials.userAuth.password);
+
+  const token = await createSession(userCredentials.id);
+
+  return token;
+}
+
+async function getUserOrFail(email: string) {
+  const userCredentials = await usersRepository.findUserByEmail(email);
+  if (!userCredentials) throw notFoundError(`Not found ${email}`);
+
+  return userCredentials;
+}
+
+async function validatePasswordOrFail(password: string, userPassword: string) {
+  const isPasswordValid = await bcrypt.compare(password, userPassword);
+  if (!isPasswordValid) throw unauthorizedError();
+}
+
+async function createSession(userId: number) {
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET);
+  await userSessionsRepository.create({ token, userId });
+
+  return token;
+}
+
 export const usersService = {
   signUp,
+  signIn,
 };
