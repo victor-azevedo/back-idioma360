@@ -13,9 +13,9 @@ CREATE TABLE "users" (
     "email" VARCHAR(255) NOT NULL,
     "phone" VARCHAR(14) NOT NULL,
     "cpf" VARCHAR(14) NOT NULL,
-    "addressId" INTEGER NOT NULL,
+    "addressId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -50,7 +50,7 @@ CREATE TABLE "address" (
     "postalCode" VARCHAR(9) NOT NULL,
     "cityId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "address_pkey" PRIMARY KEY ("id")
 );
@@ -79,7 +79,7 @@ CREATE TABLE "enrollments" (
     "userId" INTEGER NOT NULL,
     "offeringId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "enrollments_pkey" PRIMARY KEY ("id")
 );
@@ -95,7 +95,7 @@ CREATE TABLE "offerings" (
     "resultDate" DATE NOT NULL,
     "classeId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "offerings_pkey" PRIMARY KEY ("id")
 );
@@ -112,7 +112,7 @@ CREATE TABLE "classes" (
     "vacancies" INTEGER NOT NULL,
     "courseId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "classes_pkey" PRIMARY KEY ("id")
 );
@@ -124,7 +124,7 @@ CREATE TABLE "courses" (
     "description" TEXT NOT NULL,
     "creditHours" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "courses_pkey" PRIMARY KEY ("id")
 );
@@ -154,7 +154,7 @@ CREATE UNIQUE INDEX "enrollments_offeringId_key" ON "enrollments"("offeringId");
 CREATE UNIQUE INDEX "offerings_classeId_key" ON "offerings"("classeId");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "userAuths" ADD CONSTRAINT "userAuths_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "users"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
