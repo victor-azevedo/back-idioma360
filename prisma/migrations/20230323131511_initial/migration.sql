@@ -24,7 +24,7 @@ CREATE TABLE "users" (
 CREATE TABLE "userAuths" (
     "id" SERIAL NOT NULL,
     "userEmail" VARCHAR(255) NOT NULL,
-    "password" VARCHAR(16) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "userAuths_pkey" PRIMARY KEY ("id")
 );

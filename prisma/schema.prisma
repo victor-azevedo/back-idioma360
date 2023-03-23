@@ -32,7 +32,7 @@ model User {
 model UserAuth {
   id        Int       @id @default(autoincrement())
   userEmail String    @unique @db.VarChar(255)
-  password  String    @db.VarChar(16)
+  password  String    @db.VarChar(255)
   user      User      @relation(fields: [userEmail], references: [email])
 
   @@map("userAuths")
