@@ -32,9 +32,9 @@ export function cpfGeneratorValid() {
 
 export function cpfGeneratorInvalid() {
   const validCpf = cpfGeneratorValid();
-  const firstDigit = parseInt(validCpf[0]);
-  const newFirstDigit = firstDigit === 9 ? firstDigit - 1 : firstDigit + 1;
-  const invalidCpf = newFirstDigit + validCpf.slice(1);
+  const lastDigit = parseInt(validCpf.slice(-1));
+  const newLastDigit = lastDigit === 9 ? lastDigit - 1 : lastDigit + 1;
+  const invalidCpf = validCpf.slice(0, -1) + newLastDigit;
   return invalidCpf;
 }
 
