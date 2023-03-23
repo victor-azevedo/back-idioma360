@@ -2,13 +2,14 @@ import app, { init } from "@/app";
 import { prisma } from "@/config";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
+import jwt from "jsonwebtoken";
 import supertest from "supertest";
-import { createUser, signUpBody } from "../factories";
+import { createUser, signUp, signUpBody } from "../factories";
 import { cleanUsersDb } from "../helpers";
 
 beforeAll(async () => {
   await init();
-  cleanUsersDb();
+  await cleanUsersDb();
 });
 
 const server = supertest(app);
@@ -62,6 +63,65 @@ describe("POST /sign-up", () => {
     const newUserInvalidBody = signUpBody({ cpf: faker.datatype.string(12) });
 
     const response = await server.post("/sign-up").send(newUserInvalidBody);
+
+    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+  });
+});
+
+describe("POST /sign-in", () => {
+  it("should respond with status 200 when sign-in success", async () => {
+    const password = faker.internet.password(8);
+    const { userEmail, user } = await createUser(signUp({ password }));
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+
+    const response = await server.post("/sign-in").send({ email: userEmail, password });
+
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toEqual({ token });
+  });
+
+  it("should respond with status 401 when receive incorrect password", async () => {
+    const { userEmail } = await createUser(signUp());
+
+    const wrongPassword = faker.internet.password(10);
+    const response = await server.post("/sign-in").send({ email: userEmail, password: wrongPassword });
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it("should respond with status 404 email unregistered", async () => {
+    await cleanUsersDb();
+    const fakerEmail = faker.internet.email();
+    const password = faker.internet.password(10);
+
+    const response = await server.post("/sign-in").send({ email: fakerEmail, password });
+
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
+  });
+
+  it("should respond with status 422 when body don't match Sign-in schema", async () => {
+    const invalidEmail = faker.datatype.string(6);
+    const invalidPassword = faker.internet.password(4);
+
+    const response = await server.post("/sign-in").send({ email: invalidEmail, password: invalidPassword });
+
+    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+  });
+
+  it("should respond with status 422 when email don't match Sign-in schema", async () => {
+    const invalidEmail = faker.datatype.string(6);
+    const password = faker.internet.password(8);
+
+    const response = await server.post("/sign-in").send({ email: invalidEmail, password });
+
+    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+  });
+
+  it("should respond with status 422 when password don't match Sign-in schema", async () => {
+    const email = faker.internet.email();
+    const invalidPassword = faker.internet.password(18);
+
+    const response = await server.post("/sign-in").send({ email, password: invalidPassword });
 
     expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
   });
