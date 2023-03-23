@@ -1,9 +1,9 @@
 import { ApplicationError } from "../protocols";
 
-export function unprocessableEntityError(details?: string[]): ApplicationInvalidateDataError {
+export function unprocessableEntityError(message?: string, details?: string[]): ApplicationInvalidateDataError {
   return {
     name: "UnprocessableEntityError",
-    message: "Invalid data",
+    message: message || "Invalid data",
     details,
   };
 }

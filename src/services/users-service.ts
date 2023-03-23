@@ -1,4 +1,5 @@
-import { conflictError } from "@/errors";
+import { conflictError, unprocessableEntityError } from "@/errors";
+import { isValidCPF } from "@/helpers";
 import { usersAuthRepository, usersRepository } from "@/repositories";
 import { SignUpBody } from "@/schemas";
 import bcrypt from "bcrypt";
@@ -7,9 +8,13 @@ async function signUp(params: SignUpBody) {
   const { password, ...userData } = params;
   const { cpf, email, phone } = userData;
 
+  if (!isValidCPF(cpf)) {
+    throw unprocessableEntityError("Is not a valid CPF");
+  }
+
   const userDuplicatedExist = await usersRepository.findDuplicatedUser({ cpf, email, phone });
   if (userDuplicatedExist) {
-    let message ="";
+    let message = "";
     if (cpf === userDuplicatedExist.cpf) {
       message += `The CPF ${cpf} is already registered\n`;
     }
