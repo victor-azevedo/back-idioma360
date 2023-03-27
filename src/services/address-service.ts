@@ -1,5 +1,5 @@
-import { badRequestError, notFoundError } from "@/errors";
-import { isValidCEP, isValidCityId } from "@/helpers";
+import { badRequestError, conflictError, notFoundError } from "@/errors";
+import { isValidCEP, isValidCityId, userAlreadyHaveAddress } from "@/helpers";
 import { addressRepository, usersRepository } from "@/repositories";
 import { AddressBody } from "@/schemas";
 import { StateUF } from "@prisma/client";
@@ -13,6 +13,14 @@ async function createUserAddress(userId: number, userAddressBody: AddressBody) {
 
   if (!(await isValidCityId(userAddressBody.cityId))) {
     throw notFoundError();
+  }
+
+  if (!(await isValidCityId(userAddressBody.cityId))) {
+    throw notFoundError();
+  }
+
+  if (await userAlreadyHaveAddress(userId)) {
+    throw conflictError();
   }
 
   const userAddress = await addressRepository.createUserAddress(userAddressBody);

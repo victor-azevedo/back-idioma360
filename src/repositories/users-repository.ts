@@ -10,6 +10,10 @@ async function findUserByEmail(email: string) {
   return await prisma.user.findUnique({ where: { email }, include: { userAuth: true } });
 }
 
+async function findUserById(id: number) {
+  return await prisma.user.findUnique({ where: { id } });
+}
+
 async function updateAddressId({ userId, addressId }: { userId: number; addressId: number }) {
   return await prisma.user.update({ where: { id: userId }, data: { addressId } });
 }
@@ -24,6 +28,7 @@ async function findUserAddress(id: number) {
 export const usersRepository = {
   findDuplicatedUser,
   findUserByEmail,
+  findUserById,
   updateAddressId,
   findUserAddress,
 };

@@ -1,5 +1,5 @@
 import { removeCpfDots } from "@/helpers";
-import { addressRepository } from "@/repositories";
+import { addressRepository, usersRepository } from "@/repositories";
 import { getViaCEPAddress } from "@/utils/cep-service";
 
 export function isValidCPF(cpfToCheck: string): boolean {
@@ -42,4 +42,13 @@ export async function isValidCityId(id: number) {
     return false;
   }
   return true;
+}
+
+export async function userAlreadyHaveAddress(id: number) {
+  const user = await usersRepository.findUserById(id);
+
+  if (user.addressId) {
+    return true;
+  }
+  return false;
 }
