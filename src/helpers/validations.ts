@@ -28,9 +28,10 @@ export function isValidCPF(cpfToCheck: string): boolean {
 export async function isValidCEP(cep: string) {
   const resultViaCEP = await getViaCEPAddress(cep.replace("-", ""));
 
-  if (resultViaCEP.erro) {
+  if (resultViaCEP === null || resultViaCEP.erro) {
     return false;
   }
+
   return true;
 }
 

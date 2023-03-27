@@ -1,4 +1,4 @@
-import { notFoundError } from "@/errors";
+import { badRequestError, notFoundError } from "@/errors";
 import { isValidCEP, isValidCityId } from "@/helpers";
 import { addressRepository, usersRepository } from "@/repositories";
 import { AddressBody } from "@/schemas";
@@ -33,19 +33,15 @@ async function findUserAddress(userId: number) {
 async function findStates() {
   const states = await addressRepository.findStates();
 
-  if (!states.length) {
-    throw notFoundError();
-  }
-
   return states;
 }
 
 async function findUFCities(uf: StateUF) {
-  const ufCities = await addressRepository.findUFCities(uf);
-
-  if (!ufCities.length) {
-    throw notFoundError();
+  if (!uf) {
+    throw badRequestError();
   }
+
+  const ufCities = await addressRepository.findUFCities(uf);
 
   return ufCities;
 }
