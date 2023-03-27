@@ -1,8 +1,9 @@
 import { prismaConnectDB, prismaDisconnectDB, redisConnect } from "@/config";
-import { signInRouter, signUpRouter } from "@/routes";
+import { addressRouter, signInRouter, signUpRouter, userAddressRouter } from "@/routes";
 import cors from "cors";
 import express, { Express } from "express";
 import "express-async-errors";
+import { authenticateToken } from "./middlewares";
 
 const app = express();
 
@@ -11,7 +12,9 @@ app
   .use(express.json())
   .get("/health", (_req, res) => res.send("OK!"))
   .use("/sign-up", signUpRouter)
-  .use("/sign-in", signInRouter);
+  .use("/sign-in", signInRouter)
+  .use("/user/address", authenticateToken, userAddressRouter)
+  .use("/address", addressRouter);
 
 export function init(): Promise<Express> {
   redisConnect();

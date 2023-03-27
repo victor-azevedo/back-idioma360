@@ -1,4 +1,5 @@
 import { removeCpfDots } from "@/helpers";
+import { addressRepository } from "@/repositories";
 import { getViaCEPAddress } from "@/utils/cep-service";
 
 export function isValidCPF(cpfToCheck: string): boolean {
@@ -28,6 +29,15 @@ export async function isValidCEP(cep: string) {
   const resultViaCEP = await getViaCEPAddress(cep.replace("-", ""));
 
   if (resultViaCEP.erro) {
+    return false;
+  }
+  return true;
+}
+
+export async function isValidCityId(id: number) {
+  const city = await addressRepository.findCityById(id);
+
+  if (!city) {
     return false;
   }
   return true;
