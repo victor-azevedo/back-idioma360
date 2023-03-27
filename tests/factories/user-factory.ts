@@ -3,7 +3,9 @@ import { SignUpBody } from "@/schemas";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcrypt";
 import dayjs from "dayjs";
+import jwt from "jsonwebtoken";
 import { cpfGeneratorValid, phoneGenerator } from "../helpers";
+import { createUserSession } from "./userSession-factory";
 
 export function signUpBody(params: Partial<SignUpBody> = {}) {
   const newSignUpBody: SignUpBody = {
@@ -38,4 +40,11 @@ export async function createUser(params?: SignUpBody) {
 
   const data = { user: { create: { ...userData, birthday: new Date(userData.birthday) } }, password: passwordHash };
   return await prisma.userAuth.create({ data, include: { user: true } });
+}
+
+export async function createUserWithSession(userId?: number) {
+  const incomingUserId = userId || (await createUser()).user.id;
+  const token = jwt.sign({ userId: incomingUserId }, process.env.JWT_SECRET);
+
+  return await createUserSession(token, incomingUserId);
 }

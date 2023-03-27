@@ -22,6 +22,11 @@ async function createUserAddress(userId: number, userAddressBody: AddressBody) {
 
 async function findUserAddress(userId: number) {
   const { address } = await usersRepository.findUserAddress(userId);
+
+  if (!address) {
+    throw notFoundError();
+  }
+
   return address;
 }
 
