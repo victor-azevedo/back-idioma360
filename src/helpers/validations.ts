@@ -1,4 +1,5 @@
 import { removeCpfDots } from "@/helpers";
+import { getViaCEPAddress } from "@/utils/cep-service";
 
 export function isValidCPF(cpfToCheck: string): boolean {
   let remainder: number;
@@ -20,5 +21,14 @@ export function isValidCPF(cpfToCheck: string): boolean {
 
   if (remainder == 10 || remainder == 11) remainder = 0;
   if (remainder != parseInt(cpf.substring(10, 11))) return false;
+  return true;
+}
+
+export async function isValidCEP(cep: string) {
+  const resultViaCEP = await getViaCEPAddress(cep.replace("-", ""));
+
+  if (resultViaCEP.erro) {
+    return false;
+  }
   return true;
 }

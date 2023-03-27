@@ -10,7 +10,8 @@ module.exports = {
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1",
     "@test/(.*)": "<rootDir>/tests/$1",
-    "axios": "axios/dist/node/axios.cjs"
+    "^axios$": require.resolve("axios"),
+    axios: "axios/dist/node/axios.cjs",
   },
   restoreMocks: true,
 };
