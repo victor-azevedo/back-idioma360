@@ -50,13 +50,23 @@ describe("POST /user/address", () => {
   });
 
   describe("when token is valid", () => {
-    it("should respond with status 201 and address data when insert data with success", async () => {
+    it("should respond with status 201 when insert address with success", async () => {
       const { token } = await createUserWithSession();
       const addressData = await userAddressBody();
 
       const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`).send(addressData);
 
       expect(response.status).toBe(httpStatus.CREATED);
+    });
+
+    it("should respond with status 409 when user already has address", async () => {
+      const { token, userId } = await createUserWithSession();
+      const addressData = await userAddressBody();
+
+      await createUserAddress(userId);
+      const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`).send(addressData);
+
+      expect(response.status).toBe(httpStatus.CONFLICT);
     });
 
     it("should respond with status 404 when inexistent CEP", async () => {
