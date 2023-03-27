@@ -15,10 +15,6 @@ async function createUserAddress(userId: number, userAddressBody: AddressBody) {
     throw notFoundError();
   }
 
-  if (!(await isValidCityId(userAddressBody.cityId))) {
-    throw notFoundError();
-  }
-
   if (await userAlreadyHaveAddress(userId)) {
     throw conflictError();
   }
