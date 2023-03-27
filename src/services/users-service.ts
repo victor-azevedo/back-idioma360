@@ -59,7 +59,7 @@ async function getUserOrFail(email: string) {
 
 async function validatePasswordOrFail(password: string, userPassword: string) {
   const isPasswordValid = await bcrypt.compare(password, userPassword);
-  if (!isPasswordValid) throw unauthorizedError();
+  if (!isPasswordValid) throw unauthorizedError("Invalid credentials");
 }
 
 async function createSession(userId: number) {
