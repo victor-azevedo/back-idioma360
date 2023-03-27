@@ -11,4 +11,8 @@ describe("CEP validation", () => {
   it("Check valid CEPs", async () => {
     validCEPs.forEach(async (validCEP) => expect(await isValidCEP(validCEP)).toBe(true));
   });
+
+  it("Check invalid CEP param", async () => {
+    expect(await isValidCEP("123456789")).toBe(false);
+  });
 });
