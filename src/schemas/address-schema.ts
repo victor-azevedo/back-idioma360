@@ -7,7 +7,7 @@ const postalCodeSchema: StringSchema = Joi.string().trim().length(9).pattern(POS
 export const addressSchema: ObjectSchema = Joi.object<AddressBody>({
   street: Joi.string().required(),
   number: Joi.string().required(),
-  complement: Joi.string().allow(null).optional(),
+  complement: Joi.string().allow(null, "").optional(),
   district: Joi.string().required(),
   postalCode: postalCodeSchema.required(),
   cityId: Joi.number().required(),
