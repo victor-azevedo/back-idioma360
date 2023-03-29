@@ -14,7 +14,7 @@ model User {
   id        Int       @id @default(autoincrement())
   name      String    @db.VarChar(255)
   fullName  String    @db.VarChar(255)
-  birthday  DateTime  @db.Date
+  birthday  DateTime  
   email     String    @unique @db.VarChar(255)
   phone     String    @unique @db.VarChar(14)
   cpf       String    @unique @db.VarChar(14)
@@ -98,12 +98,12 @@ model Enrollment {
 
 model Offering {
   id          Int       @id @default(autoincrement())
-  startDate   DateTime  @db.Date
-  endDate     DateTime  @db.Date
-  testDate    DateTime  @db.Date
+  startDate   DateTime  
+  endDate     DateTime  
+  testDate    DateTime  
   testStartTime DateTime  @db.Time()
   testEndTime   DateTime  @db.Time()
-  resultDate  DateTime  @db.Date
+  resultDate  DateTime  
   classeId    Int       @unique
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -119,8 +119,8 @@ model Classe {
   days      WeekDay[]
   startTime DateTime  @db.Time()
   endTime   DateTime  @db.Time()
-  startDate DateTime  @db.Date
-  endDate   DateTime  @db.Date
+  startDate DateTime  
+  endDate   DateTime  
   vacancies Int
   courseId  Int
   createdAt DateTime  @default(now())
