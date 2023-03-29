@@ -5,7 +5,7 @@ async function findAll() {
 }
 
 async function findById(id: number) {
-  return await prisma.classe.findUnique({ where: { id }, include: { course: true } });
+  return await prisma.classe.findUnique({ where: { id }, include: { course: true, offering: true } });
 }
 
 export const classesRepository = {
