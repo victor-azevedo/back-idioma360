@@ -31,7 +31,7 @@ async function signUp(params: SignUpBody) {
   const passwordHash = bcrypt.hashSync(password, 10);
 
   await usersAuthRepository.create({
-    user: { create: { ...userData, birthday: new Date(userData.birthday) } },
+    user: { create: { ...userData, birthday: new Date(userData.birthday + "T00:00") } },
     password: passwordHash,
   });
 
