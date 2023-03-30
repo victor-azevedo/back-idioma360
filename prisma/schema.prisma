@@ -23,7 +23,7 @@ model User {
   updatedAt   DateTime  @updatedAt
   userAuth    UserAuth?
   userSession UserSession[]
-  enrolment   Enrollment?
+  enrolment   Enrollment[]
   address     Address?  @relation(fields: [addressId], references: [id])
 
   @@map("users")
@@ -86,8 +86,8 @@ model State {
 
 model Enrollment {
   id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  offeringId  Int       @unique
+  userId      Int       
+  offeringId  Int       
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id])
@@ -107,7 +107,7 @@ model Offering {
   classeId    Int       @unique
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  enrolment   Enrollment?
+  enrolment   Enrollment[]
   classe      Classe    @relation(fields: [classeId], references: [id])
 
   @@map("offerings")
