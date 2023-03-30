@@ -7,8 +7,10 @@ export const querySchema: ObjectSchema = Joi.object<QuerySchema>({
     .length(2)
     .valid(...statesUFList)
     .optional(),
+  enrollments: Joi.boolean().optional(),
 });
 
 export type QuerySchema = Partial<{
   uf: StateUF;
+  enrollments: boolean;
 }>;

@@ -3,7 +3,11 @@ import { offeringsRepository } from "@/repositories";
 import { enrollmentsRepository } from "@/repositories/enrollments-repository";
 import { Prisma } from "@prisma/client";
 
-async function findAll() {
+async function findAll({ userId, includeEnrollments }: { userId: number; includeEnrollments: boolean }) {
+  if (includeEnrollments) {
+    return await offeringsRepository.findAllWithUserEnrollments(userId);
+  }
+
   return await offeringsRepository.findAll();
 }
 
