@@ -7,7 +7,7 @@ async function findAll() {
 async function findById({ id, userId }: { id: number; userId: number }) {
   return await prisma.classe.findUnique({
     where: { id },
-    include: { course: true, offering: { include: { enrolment: { where: { userId } } } } },
+    include: { course: true, offering: { include: { enrollment: { where: { userId } } } } },
   });
 }
 
