@@ -5,8 +5,8 @@ async function findAll() {
   return await classesRepository.findAll();
 }
 
-async function findById(id: number) {
-  const classe = await classesRepository.findById(id);
+async function findById({ id, userId }: { id: number; userId: number }) {
+  const classe = await classesRepository.findById({ id, userId });
 
   if (!classe) {
     throw notFoundError();

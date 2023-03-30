@@ -15,9 +15,10 @@ async function getAll(req: AuthenticatedRequest, res: Response) {
 
 async function getClasseById(req: AuthenticatedRequest, res: Response) {
   const { id } = req.params;
+  const { userId } = req;
 
   try {
-    const classe = await classesService.findById(parseInt(id));
+    const classe = await classesService.findById({ id: parseInt(id), userId });
     return res.status(httpStatus.OK).send(classe);
   } catch (error) {
     handleRequestError(error, res);
