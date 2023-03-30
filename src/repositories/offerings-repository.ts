@@ -6,7 +6,7 @@ async function findAll() {
 
 async function findAllWithUserEnrollments(userId: number) {
   return await prisma.offering.findMany({
-    include: { enrolment: { where: { userId } }, classe: { include: { course: { select: { name: true } } } } },
+    include: { enrollment: { where: { userId } }, classe: { include: { course: { select: { name: true } } } } },
   });
 }
 
