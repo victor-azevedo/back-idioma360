@@ -6,6 +6,7 @@ import {
   GermanCourseDescription,
   SpanishCourseDescription,
 } from "../src/mock/courses";
+import { testGenerate } from "../src/mock/seed/tests";
 
 const prisma = new PrismaClient();
 
@@ -182,6 +183,21 @@ async function main() {
         },
       ],
     });
+  }
+
+  const tests = await prisma.test.findMany();
+  if (tests.length === 0) {
+    const classe = await prisma.classe.findFirst({ select: { id: true } });
+    if (classe) {
+      const { id } = await prisma.test.create({
+        data: {
+          classeId: classe.id,
+        },
+      });
+      await prisma.question.createMany({
+        data: testGenerate(id),
+      });
+    }
   }
 }
 
