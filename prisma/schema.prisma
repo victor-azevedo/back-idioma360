@@ -130,8 +130,36 @@ model Classe {
   updatedAt   DateTime     @updatedAt
   course      Course?      @relation(fields: [courseId], references: [id])
   offering    Offering?    @relation(fields: [offeringId], references: [id])
+  Test        Test?
 
   @@map("classes")
+}
+
+model Test {
+  id        Int        @id @default(autoincrement())
+  classeId  Int        @unique
+  classe    Classe     @relation(fields: [classeId], references: [id])
+  questions Question[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("tests")
+}
+
+model Question {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.Text
+  optionA       String   @db.Text
+  optionB       String   @db.Text
+  optionC       String   @db.Text
+  optionD       String   @db.Text
+  correctAnswer Options
+  testId        Int
+  test          Test     @relation(fields: [testId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("questions")
 }
 
 model Course {
@@ -145,6 +173,13 @@ model Course {
   updatedAt   DateTime @updatedAt
 
   @@map("courses")
+}
+
+enum Options {
+  optionA
+  optionB
+  optionC
+  optionD
 }
 
 enum RolesTypes {
