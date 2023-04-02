@@ -1,12 +1,12 @@
 import { prisma } from "@/config";
 
 async function findAll() {
-  return await prisma.offering.findMany({ include: { classe: { include: { course: { select: { name: true } } } } } });
+  return await prisma.offering.findMany({ include: { classes: { include: { course: true } } } });
 }
 
 async function findAllWithUserEnrollments(userId: number) {
   return await prisma.offering.findMany({
-    include: { enrollment: { where: { userId } }, classe: { include: { course: { select: { name: true } } } } },
+    include: { classes: { include: { enrollments: { where: { userId } } } } },
   });
 }
 
