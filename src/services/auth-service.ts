@@ -1,11 +1,12 @@
 import { conflictError, notFoundError, unauthorizedError, unprocessableEntityError } from "@/errors";
 import { isValidCPF } from "@/helpers";
-import { usersAuthRepository, userSessionsRepository, usersRepository } from "@/repositories";
+import { userSessionsRepository, usersAuthRepository, usersRepository } from "@/repositories";
 import { SignInBody, SignUpBody } from "@/schemas";
+import { RolesTypes } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-async function signUp(params: SignUpBody) {
+async function signUpStudent(params: SignUpBody) {
   const { password, ...userData } = params;
   const { cpf, email, phone } = userData;
 
@@ -30,9 +31,10 @@ async function signUp(params: SignUpBody) {
 
   const passwordHash = bcrypt.hashSync(password, 10);
 
-  await usersAuthRepository.create({
-    user: { create: { ...userData, birthday: new Date(userData.birthday) } },
+  await usersAuthRepository.createUserStudent({
+    user: { create: { ...userData, birthday: new Date(userData.birthday + "T00:00") } },
     password: passwordHash,
+    role: "student",
   });
 
   return;
@@ -45,7 +47,7 @@ async function signIn(params: SignInBody) {
 
   await validatePasswordOrFail(password, userCredentials.userAuth.password);
 
-  const token = await createSession(userCredentials.id);
+  const token = await createSession(userCredentials.id, userCredentials.userAuth.role);
 
   return token;
 }
@@ -62,14 +64,14 @@ async function validatePasswordOrFail(password: string, userPassword: string) {
   if (!isPasswordValid) throw unauthorizedError("Invalid credentials");
 }
 
-async function createSession(userId: number) {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET);
+async function createSession(userId: number, role: RolesTypes) {
+  const token = jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXP });
   await userSessionsRepository.create({ token, userId });
 
   return token;
 }
 
 export const usersService = {
-  signUp,
+  signUpStudent,
   signIn,
 };

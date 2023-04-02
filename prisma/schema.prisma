@@ -11,40 +11,40 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(255)
-  fullName  String    @db.VarChar(255)
-  birthday  DateTime  @db.Date
-  email     String    @unique @db.VarChar(255)
-  phone     String    @unique @db.VarChar(14)
-  cpf       String    @unique @db.VarChar(14)
-  addressId Int?      @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  userAuth    UserAuth?
-  userSession UserSession[]
-  enrolment   Enrollment?
-  address     Address?  @relation(fields: [addressId], references: [id])
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(255)
+  fullName     String        @db.VarChar(255)
+  birthday     DateTime
+  email        String        @unique @db.VarChar(255)
+  phone        String        @unique @db.VarChar(14)
+  cpf          String        @unique @db.VarChar(14)
+  userAuth     UserAuth?
+  address      Address?
+  userSessions UserSession[]
+  enrollments  Enrollment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("users")
 }
 
 model UserAuth {
-  id        Int       @id @default(autoincrement())
-  userEmail String    @unique @db.VarChar(255)
-  password  String    @db.VarChar(255)
-  user      User      @relation(fields: [userEmail], references: [email])
+  id        Int        @id @default(autoincrement())
+  userEmail String     @unique @db.VarChar(255)
+  password  String     @db.VarChar(255)
+  role      RolesTypes @default(student)
+  user      User       @relation(fields: [userEmail], references: [email])
 
   @@map("userAuths")
 }
 
 model UserSession {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    Int
-  token     String    @db.VarChar(255)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id])
+  token     String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("userSessions")
 }
@@ -57,9 +57,10 @@ model Address {
   district   String   @db.VarChar(255)
   postalCode String   @db.VarChar(9)
   cityId     Int
+  userId     Int      @unique
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  user       User?
+  user       User     @relation(fields: [userId], references: [id])
   city       City     @relation(fields: [cityId], references: [id])
 
   @@map("address")
@@ -76,71 +77,120 @@ model City {
 }
 
 model State {
-  id   Int     @id
-  name String  @db.VarChar(255)
-  uf   StateUF
-  city City[]
+  id     Int     @id
+  name   String  @db.VarChar(255)
+  uf     StateUF
+  cities City[]
 
   @@map("states")
 }
 
 model Enrollment {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  offeringId  Int       @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        User      @relation(fields: [userId], references: [id])
-  offering    Offering  @relation(fields: [offeringId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  classeId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  classe    Classe   @relation(fields: [classeId], references: [id])
 
   @@map("enrollments")
 }
 
 model Offering {
-  id          Int       @id @default(autoincrement())
-  startDate   DateTime  @db.Date
-  endDate     DateTime  @db.Date
-  testDate    DateTime  @db.Date
-  testStartTime DateTime  @db.Time()
-  testEndTime   DateTime  @db.Time()
-  resultDate  DateTime  @db.Date
-  classeId    Int       @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  enrolment   Enrollment?
-  classe      Classe    @relation(fields: [classeId], references: [id])
+  id            Int         @id @default(autoincrement())
+  startDate     DateTime
+  endDate       DateTime
+  testDate      DateTime
+  testStartTime DateTime    @db.Time()
+  testEndTime   DateTime    @db.Time()
+  resultDate    DateTime
+  enrollPrice   Int
+  status        OfferStatus @default(open)
+  classes       Classe[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   @@map("offerings")
 }
 
 model Classe {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(255)
-  days      WeekDay[]
-  startTime DateTime  @db.Time()
-  endTime   DateTime  @db.Time()
-  startDate DateTime  @db.Date
-  endDate   DateTime  @db.Date
-  vacancies Int
-  courseId  Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  offering  Offering?
-  course    Course    @relation(fields: [courseId], references: [id])
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(255)
+  days        WeekDay[]
+  startTime   DateTime     @db.Time()
+  endTime     DateTime     @db.Time()
+  startDate   DateTime
+  endDate     DateTime
+  vacancies   Int
+  offeringId  Int?
+  courseId    Int
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  course      Course?      @relation(fields: [courseId], references: [id])
+  offering    Offering?    @relation(fields: [offeringId], references: [id])
+  Test        Test?
 
   @@map("classes")
 }
 
+model Test {
+  id        Int        @id @default(autoincrement())
+  classeId  Int        @unique
+  classe    Classe     @relation(fields: [classeId], references: [id])
+  questions Question[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("tests")
+}
+
+model Question {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.Text
+  optionA       String   @db.Text
+  optionB       String   @db.Text
+  optionC       String   @db.Text
+  optionD       String   @db.Text
+  correctAnswer Options
+  testId        Int
+  test          Test     @relation(fields: [testId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("questions")
+}
+
 model Course {
-  id          Int        @id @default(autoincrement())
-  name        String     @db.VarChar(255)
-  description String     @db.Text
-  creditHours Int        @db.Integer
-  createdAt   DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  classe      Classe[]
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String   @db.Text
+  creditHours Int      @db.Integer
+  imageUrl    String   @db.Text
+  classes     Classe[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("courses")
+}
+
+enum Options {
+  optionA
+  optionB
+  optionC
+  optionD
+}
+
+enum RolesTypes {
+  admin
+  student
+}
+
+enum OfferStatus {
+  open
+  closed
+  blocked
 }
 
 enum StateUF {
@@ -182,4 +232,3 @@ enum WeekDay {
   Friday
   Saturday
 }
-

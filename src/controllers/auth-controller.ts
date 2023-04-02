@@ -1,14 +1,14 @@
+import { handleRequestError } from "@/middlewares";
 import { SignInBody, SignUpBody } from "@/schemas";
 import { usersService } from "@/services";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { handleRequestError } from "../middlewares";
 
-export async function signUp(req: Request, res: Response) {
+export async function signUpUser(req: Request, res: Response) {
   const newUser = req.body as SignUpBody;
 
   try {
-    await usersService.signUp(newUser);
+    await usersService.signUpStudent(newUser);
     return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     handleRequestError(error, res);
