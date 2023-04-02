@@ -1,6 +1,6 @@
 import { CPF_PATTERN_WITH_DOTS, PHONE_PATTERN } from "@/helpers";
 import joiDate from "@joi/date";
-import { User, UserAuth } from "@prisma/client";
+import { RolesTypes, User, UserAuth } from "@prisma/client";
 import coreJoi, { ObjectSchema, StringSchema } from "joi";
 
 const Joi = coreJoi.extend(joiDate) as typeof coreJoi;
@@ -26,5 +26,19 @@ export const signUpSchema: ObjectSchema = Joi.object<SignUpBody>({
   password: Joi.string().trim().min(6).max(16).required(),
 });
 
+export const signUpAdminSchema: ObjectSchema = Joi.object<SignUpAdminBody>({
+  name: nameSchema.required(),
+  fullName: nameSchema.required(),
+  birthday: Joi.date().format("YYYY-MM-DD").required(),
+  cpf: cpfSchema.required(),
+  email: emailSchema.required(),
+  phone: phoneSchema.required(),
+  password: Joi.string().trim().min(6).max(16).required(),
+  role: Joi.string().valid(Object.keys(RolesTypes).join(",")).required(),
+});
+
 export type SignUpBody = Pick<User, "name" | "fullName" | "birthday" | "cpf" | "phone" | "email"> &
   Pick<UserAuth, "password">;
+
+export type SignUpAdminBody = Pick<User, "name" | "fullName" | "birthday" | "cpf" | "phone" | "email"> &
+  Pick<UserAuth, "password" | "role">;
