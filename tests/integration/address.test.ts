@@ -16,7 +16,7 @@ beforeAll(async () => {
 
 const server = supertest(app);
 
-describe("POST /user/address", () => {
+describe("POST /address/user", () => {
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.post("/address/user");
 
@@ -102,7 +102,7 @@ describe("POST /user/address", () => {
   });
 });
 
-describe("GET /user/address", () => {
+describe("GET /address/user", () => {
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.get("/address/user");
 

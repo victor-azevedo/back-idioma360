@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "lint:staged": "lint-staged",
     "test": "NODE_ENV=test jest --passWithNoTests --runInBand",
+    "test:verbose": "NODE_ENV=test jest --verbose --passWithNoTests --runInBand",
     "test:watch": "jest --watch --passWithNoTests --runInBand",
     "test:coverage": "NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom=./src/** --collectCoverageFrom=!src/server.ts",
     "test:load-envs": "dotenv -e .env.test",
