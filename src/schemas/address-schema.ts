@@ -13,4 +13,4 @@ export const addressSchema: ObjectSchema = Joi.object<AddressBody>({
   cityId: Joi.number().required(),
 });
 
-export type AddressBody = Omit<Address, "id" | "createdAt" | "updatedAt">;
+export type AddressBody = Omit<Address, "id" | "userId" | "createdAt" | "updatedAt">;

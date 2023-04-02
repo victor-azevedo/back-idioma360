@@ -2,12 +2,13 @@ import { prisma } from "@/config";
 import { Prisma, StateUF } from "@prisma/client";
 
 async function createUserAddress(data: Prisma.AddressCreateManyInput) {
-  return await prisma.address.create({ data });
+  await prisma.address.create({ data, select: { id: true } });
 }
 
 async function findUserAddress(userId: number) {
   return await prisma.address.findUnique({
     where: { userId },
+    include: { city: { include: { state: true } } },
   });
 }
 

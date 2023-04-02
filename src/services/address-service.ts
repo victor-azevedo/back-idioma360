@@ -19,7 +19,7 @@ async function createUserAddress(userId: number, userAddressBody: AddressBody) {
     throw conflictError();
   }
 
-  await addressRepository.createUserAddress(userAddressBody);
+  await addressRepository.createUserAddress({ ...userAddressBody, userId });
 }
 
 async function findUserAddress(userId: number) {
