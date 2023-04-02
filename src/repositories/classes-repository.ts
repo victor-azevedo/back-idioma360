@@ -1,7 +1,7 @@
 import { prisma } from "@/config";
 
 async function findAll() {
-  return await prisma.classe.findMany();
+  return await prisma.classe.findMany({ include: { course: true, offering: true } });
 }
 
 async function findById({ id, userId }: { id: number; userId: number }) {
