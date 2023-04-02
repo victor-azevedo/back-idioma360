@@ -44,7 +44,7 @@ export async function createUser(params?: SignUpBody) {
 
 export async function createUserWithSession(userId?: number) {
   const incomingUserId = userId || (await createUser()).user.id;
-  const token = jwt.sign({ userId: incomingUserId }, process.env.JWT_SECRET);
+  const token = jwt.sign({ userId: incomingUserId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXP });
 
   return await createUserSession(token, incomingUserId);
 }

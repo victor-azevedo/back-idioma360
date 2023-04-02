@@ -4,10 +4,12 @@ import { cities, states } from "@/helpers";
 export async function cleanUsersDb() {
   await prisma.userSession.deleteMany();
   await prisma.userAuth.deleteMany();
+  await prisma.address.deleteMany();
   await prisma.user.deleteMany();
 }
 
 export async function deleteStatesDb() {
+  await prisma.address.deleteMany();
   await prisma.city.deleteMany();
   await prisma.state.deleteMany();
 }

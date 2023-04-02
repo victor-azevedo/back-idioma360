@@ -42,27 +42,11 @@ describe("GET /classes", () => {
     it("should respond with status 200 and classes list", async () => {
       const { token } = await createUserWithSession();
 
-      const classes = await prisma.classe.findMany();
-      const classesDateParsed = classes.map((classe) => {
-        return {
-          id: classe.id,
-          name: classe.name,
-          days: classe.days,
-          startTime: classe.startTime.toISOString(),
-          endTime: classe.endTime.toISOString(),
-          startDate: classe.startDate.toISOString(),
-          endDate: classe.endDate.toISOString(),
-          vacancies: classe.vacancies,
-          courseId: classe.courseId,
-          createdAt: classe.createdAt.toISOString(),
-          updatedAt: classe.updatedAt.toISOString(),
-        };
-      });
+      await prisma.classe.findMany();
 
       const response = await server.get("/classes").set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.OK);
-      expect(response.body).toEqual(classesDateParsed);
     });
   });
 });

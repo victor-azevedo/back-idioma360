@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "2d1477c8-24a7-4052-ad7e-675d8de8a3a6",
+		"name": "Idioma360",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24398741"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Sign-up",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Victor\",\n  \"fullName\": \"Victor Azevedo\",\n  \"birthday\": \"1989-11-23\",\n  \"cpf\": \"002.105.080-51\",\n  \"phone\": \"(85)3477-2279\",\n  \"email\": \"victor@uol.com\",\n  \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/auth/sign-up",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign-in",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"victor@uol.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/auth/sign-in",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"sign-in"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "AuthRoutes",
+			"item": [
+				{
+					"name": "Address",
+					"item": [
+						{
+							"name": "userAdress",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_BASE_URL}}/user/address",
+									"host": [
+										"{{API_BASE_URL}}"
+									],
+									"path": [
+										"user",
+										"address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "states",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_BASE_URL}}/address/states",
+									"host": [
+										"{{API_BASE_URL}}"
+									],
+									"path": [
+										"address",
+										"states"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cities",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_BASE_URL}}/address/cities?uf=CE",
+									"host": [
+										"{{API_BASE_URL}}"
+									],
+									"path": [
+										"address",
+										"cities"
+									],
+									"query": [
+										{
+											"key": "uf",
+											"value": "CE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "userAdress",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"street\": \"Margarida Fonseca Arruda\",\n  \"number\": \"65\",\n  \"complement\": null,\n  \"district\": \"Manaira\",\n  \"postalCode\": \"58038-600\",\n  \"cityId\": 1200435\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_BASE_URL}}/user/address",
+									"host": [
+										"{{API_BASE_URL}}"
+									],
+									"path": [
+										"user",
+										"address"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "offerings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/offerings",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"offerings"
+							],
+							"query": [
+								{
+									"key": "enrollments",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "classes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/classes",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "classesId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/classes/1",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"classes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/courses",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{TOKEN}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

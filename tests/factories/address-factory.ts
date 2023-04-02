@@ -17,8 +17,7 @@ export async function userAddressBody(params: Partial<AddressBody> = {}) {
 export async function createUserAddress(userId: number) {
   const newAddress = await userAddressBody();
 
-  const userAddress = await prisma.address.create({ data: newAddress });
-  await prisma.user.update({ where: { id: userId }, data: { addressId: userAddress.id } });
+  await prisma.address.create({ data: { ...newAddress, userId } });
 
   const { address } = await prisma.user.findUnique({
     where: { id: userId },

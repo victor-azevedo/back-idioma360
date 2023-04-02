@@ -18,7 +18,7 @@ const server = supertest(app);
 
 describe("POST /user/address", () => {
   it("should respond with status 401 if no token is given", async () => {
-    const response = await server.post("/user/address");
+    const response = await server.post("/address/user");
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -27,7 +27,7 @@ describe("POST /user/address", () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
-    const response = await server.post("/user/address").set("Authorization", `${token}`);
+    const response = await server.post("/address/user").set("Authorization", `${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -35,7 +35,7 @@ describe("POST /user/address", () => {
   it("should respond with status 401 if given token is not valid", async () => {
     const token = faker.lorem.word();
 
-    const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`);
+    const response = await server.post("/address/user").set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -44,7 +44,7 @@ describe("POST /user/address", () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
-    const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`);
+    const response = await server.post("/address/user").set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -54,7 +54,7 @@ describe("POST /user/address", () => {
       const { token } = await createUserWithSession();
       const addressData = await userAddressBody();
 
-      const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`).send(addressData);
+      const response = await server.post("/address/user").set("Authorization", `Bearer ${token}`).send(addressData);
 
       expect(response.status).toBe(httpStatus.CREATED);
     });
@@ -64,7 +64,7 @@ describe("POST /user/address", () => {
       const addressData = await userAddressBody();
 
       await createUserAddress(userId);
-      const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`).send(addressData);
+      const response = await server.post("/address/user").set("Authorization", `Bearer ${token}`).send(addressData);
 
       expect(response.status).toBe(httpStatus.CONFLICT);
     });
@@ -73,7 +73,7 @@ describe("POST /user/address", () => {
       const { token } = await createUserWithSession();
       const addressData = await userAddressBody({ postalCode: "00000-000" });
 
-      const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`).send(addressData);
+      const response = await server.post("/address/user").set("Authorization", `Bearer ${token}`).send(addressData);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -84,7 +84,7 @@ describe("POST /user/address", () => {
         postalCode: faker.datatype.string(9),
       });
 
-      const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`).send(addressData);
+      const response = await server.post("/address/user").set("Authorization", `Bearer ${token}`).send(addressData);
 
       expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -95,7 +95,7 @@ describe("POST /user/address", () => {
         cityId: faker.datatype.number({ max: 999999 }),
       });
 
-      const response = await server.post("/user/address").set("Authorization", `Bearer ${token}`).send(addressData);
+      const response = await server.post("/address/user").set("Authorization", `Bearer ${token}`).send(addressData);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -104,7 +104,7 @@ describe("POST /user/address", () => {
 
 describe("GET /user/address", () => {
   it("should respond with status 401 if no token is given", async () => {
-    const response = await server.get("/user/address");
+    const response = await server.get("/address/user");
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -112,7 +112,7 @@ describe("GET /user/address", () => {
   it("should respond with status 401 if given token is not valid", async () => {
     const token = faker.lorem.word();
 
-    const response = await server.get("/user/address").set("Authorization", `Bearer ${token}`);
+    const response = await server.get("/address/user").set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -121,7 +121,7 @@ describe("GET /user/address", () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
-    const response = await server.get("/user/address").set("Authorization", `Bearer ${token}`);
+    const response = await server.get("/address/user").set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -131,7 +131,7 @@ describe("GET /user/address", () => {
       const { token, userId } = await createUserWithSession();
       const userAddress = await createUserAddress(userId);
 
-      const response = await server.get("/user/address").set("Authorization", `Bearer ${token}`);
+      const response = await server.get("/address/user").set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual({
@@ -141,6 +141,7 @@ describe("GET /user/address", () => {
         complement: userAddress.complement,
         postalCode: userAddress.postalCode,
         district: userAddress.district,
+        userId: userAddress.userId,
         cityId: userAddress.cityId,
         city: {
           id: userAddress.city.id,
@@ -160,7 +161,7 @@ describe("GET /user/address", () => {
     it("should respond with status 404 when there isn't user's address", async () => {
       const { token } = await createUserWithSession();
 
-      const response = await server.get("/user/address").set("Authorization", `Bearer ${token}`);
+      const response = await server.get("/address/user").set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });

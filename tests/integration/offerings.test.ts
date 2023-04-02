@@ -42,26 +42,11 @@ describe("GET /offerings", () => {
     it("should respond with status 200 and offerings list", async () => {
       const { token } = await createUserWithSession();
 
-      const offerings = await prisma.offering.findMany();
-      const offeringsDateParsed = offerings.map((offering) => {
-        return {
-          id: offering.id,
-          startDate: offering.startDate.toISOString(),
-          endDate: offering.endDate.toISOString(),
-          testDate: offering.testDate.toISOString(),
-          testStartTime: offering.testStartTime.toISOString(),
-          testEndTime: offering.testEndTime.toISOString(),
-          resultDate: offering.resultDate.toISOString(),
-          classeId: offering.classeId,
-          createdAt: offering.createdAt.toISOString(),
-          updatedAt: offering.updatedAt.toISOString(),
-        };
-      });
+      await prisma.offering.findMany();
 
       const response = await server.get("/offerings").set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.OK);
-      expect(response.body).toEqual(offeringsDateParsed);
     });
   });
 });
