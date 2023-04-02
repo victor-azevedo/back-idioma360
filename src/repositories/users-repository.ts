@@ -14,10 +14,6 @@ async function findUserById(id: number) {
   return await prisma.user.findUnique({ where: { id } });
 }
 
-async function updateAddressId({ userId, addressId }: { userId: number; addressId: number }) {
-  return await prisma.user.update({ where: { id: userId }, data: { addressId } });
-}
-
 async function findUserAddress(id: number) {
   return await prisma.user.findUnique({
     where: { id },
@@ -29,6 +25,5 @@ export const usersRepository = {
   findDuplicatedUser,
   findUserByEmail,
   findUserById,
-  updateAddressId,
   findUserAddress,
 };
