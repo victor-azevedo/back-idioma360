@@ -1,5 +1,5 @@
 import { prismaConnectDB, prismaDisconnectDB, redisConnect } from "@/config";
-import { AuthRouter, addressRouter, classesRouter, coursesRouter, offeringsRouter, userAddressRouter } from "@/routes";
+import { addressRouter, authRouter, classesRouter, coursesRouter, offeringsRouter, userAddressRouter } from "@/routes";
 import cors from "cors";
 import express, { Express } from "express";
 import "express-async-errors";
@@ -11,7 +11,7 @@ app
   .use(cors())
   .use(express.json())
   .get("/health", (_req, res) => res.send("OK!"))
-  .use("/auth", AuthRouter)
+  .use("/auth", authRouter)
   .use("/user/address", authenticateToken, userAddressRouter)
   .use("/address", addressRouter)
   .use("/offerings", offeringsRouter)

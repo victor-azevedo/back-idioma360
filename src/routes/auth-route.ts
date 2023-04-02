@@ -3,9 +3,9 @@ import { validateBody } from "@/middlewares";
 import { signInSchema, signUpSchema } from "@/schemas";
 import { Router } from "express";
 
-const AuthRouter = Router();
+const authRouter = Router();
 
-AuthRouter.post("/sign-up", validateBody(signUpSchema), signUpUser);
-AuthRouter.post("/sign-in", validateBody(signInSchema), signIn);
+authRouter.post("/sign-up", validateBody(signUpSchema), signUpUser);
+authRouter.post("/sign-in", validateBody(signInSchema), signIn);
 
-export { AuthRouter };
+export { authRouter };
