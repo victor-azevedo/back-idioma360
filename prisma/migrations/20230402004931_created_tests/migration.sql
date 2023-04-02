@@ -1,4 +1,13 @@
 -- CreateEnum
+CREATE TYPE "Options" AS ENUM ('optionA', 'optionB', 'optionC', 'optionD');
+
+-- CreateEnum
+CREATE TYPE "RolesTypes" AS ENUM ('admin', 'student');
+
+-- CreateEnum
+CREATE TYPE "OfferStatus" AS ENUM ('open', 'closed', 'blocked');
+
+-- CreateEnum
 CREATE TYPE "StateUF" AS ENUM ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO');
 
 -- CreateEnum
@@ -9,11 +18,10 @@ CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "fullName" VARCHAR(255) NOT NULL,
-    "birthday" DATE NOT NULL,
+    "birthday" TIMESTAMP(3) NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "phone" VARCHAR(14) NOT NULL,
     "cpf" VARCHAR(14) NOT NULL,
-    "addressId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -25,6 +33,7 @@ CREATE TABLE "userAuths" (
     "id" SERIAL NOT NULL,
     "userEmail" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
+    "role" "RolesTypes" NOT NULL DEFAULT 'student',
 
     CONSTRAINT "userAuths_pkey" PRIMARY KEY ("id")
 );
@@ -49,6 +58,7 @@ CREATE TABLE "address" (
     "district" VARCHAR(255) NOT NULL,
     "postalCode" VARCHAR(9) NOT NULL,
     "cityId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -77,7 +87,7 @@ CREATE TABLE "states" (
 CREATE TABLE "enrollments" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "offeringId" INTEGER NOT NULL,
+    "classeId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -87,13 +97,14 @@ CREATE TABLE "enrollments" (
 -- CreateTable
 CREATE TABLE "offerings" (
     "id" SERIAL NOT NULL,
-    "startDate" DATE NOT NULL,
-    "endDate" DATE NOT NULL,
-    "testDate" DATE NOT NULL,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
+    "testDate" TIMESTAMP(3) NOT NULL,
     "testStartTime" TIME NOT NULL,
     "testEndTime" TIME NOT NULL,
-    "resultDate" DATE NOT NULL,
-    "classeId" INTEGER NOT NULL,
+    "resultDate" TIMESTAMP(3) NOT NULL,
+    "enrollPrice" INTEGER NOT NULL,
+    "status" "OfferStatus" NOT NULL DEFAULT 'open',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -107,9 +118,10 @@ CREATE TABLE "classes" (
     "days" "WeekDay"[],
     "startTime" TIME NOT NULL,
     "endTime" TIME NOT NULL,
-    "startDate" DATE NOT NULL,
-    "endDate" DATE NOT NULL,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
     "vacancies" INTEGER NOT NULL,
+    "offeringId" INTEGER,
     "courseId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -118,11 +130,38 @@ CREATE TABLE "classes" (
 );
 
 -- CreateTable
+CREATE TABLE "tests" (
+    "id" SERIAL NOT NULL,
+    "classeId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "tests_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "questions" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "optionA" TEXT NOT NULL,
+    "optionB" TEXT NOT NULL,
+    "optionC" TEXT NOT NULL,
+    "optionD" TEXT NOT NULL,
+    "correctAnswer" "Options" NOT NULL,
+    "testId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "questions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "courses" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "description" TEXT NOT NULL,
     "creditHours" INTEGER NOT NULL,
+    "imageUrl" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -139,28 +178,22 @@ CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
 CREATE UNIQUE INDEX "users_cpf_key" ON "users"("cpf");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_addressId_key" ON "users"("addressId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "userAuths_userEmail_key" ON "userAuths"("userEmail");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "enrollments_userId_key" ON "enrollments"("userId");
+CREATE UNIQUE INDEX "address_userId_key" ON "address"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "enrollments_offeringId_key" ON "enrollments"("offeringId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "offerings_classeId_key" ON "offerings"("classeId");
-
--- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "address"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+CREATE UNIQUE INDEX "tests_classeId_key" ON "tests"("classeId");
 
 -- AddForeignKey
 ALTER TABLE "userAuths" ADD CONSTRAINT "userAuths_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "users"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "userSessions" ADD CONSTRAINT "userSessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "address" ADD CONSTRAINT "address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "address" ADD CONSTRAINT "address_cityId_fkey" FOREIGN KEY ("cityId") REFERENCES "cities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -172,10 +205,16 @@ ALTER TABLE "cities" ADD CONSTRAINT "cities_stateId_fkey" FOREIGN KEY ("stateId"
 ALTER TABLE "enrollments" ADD CONSTRAINT "enrollments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "enrollments" ADD CONSTRAINT "enrollments_offeringId_fkey" FOREIGN KEY ("offeringId") REFERENCES "offerings"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "offerings" ADD CONSTRAINT "offerings_classeId_fkey" FOREIGN KEY ("classeId") REFERENCES "classes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "enrollments" ADD CONSTRAINT "enrollments_classeId_fkey" FOREIGN KEY ("classeId") REFERENCES "classes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "classes" ADD CONSTRAINT "classes_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "courses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "classes" ADD CONSTRAINT "classes_offeringId_fkey" FOREIGN KEY ("offeringId") REFERENCES "offerings"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tests" ADD CONSTRAINT "tests_classeId_fkey" FOREIGN KEY ("classeId") REFERENCES "classes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "questions" ADD CONSTRAINT "questions_testId_fkey" FOREIGN KEY ("testId") REFERENCES "tests"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
