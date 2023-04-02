@@ -5,6 +5,12 @@ async function createUserAddress(data: Prisma.AddressCreateManyInput) {
   return await prisma.address.create({ data });
 }
 
+async function findUserAddress(userId: number) {
+  return await prisma.address.findUnique({
+    where: { userId },
+  });
+}
+
 async function findStates() {
   return await prisma.state.findMany({
     orderBy: { uf: "asc" },
@@ -26,6 +32,7 @@ async function findCityById(id: number) {
 
 export const addressRepository = {
   createUserAddress,
+  findUserAddress,
   findStates,
   findUFCities,
   findCityById,
