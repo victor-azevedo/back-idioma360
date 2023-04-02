@@ -16,18 +16,6 @@ async function getAll(req: AuthenticatedRequest, res: Response) {
   }
 }
 
-async function postEnrollment(req: AuthenticatedRequest, res: Response) {
-  const { userId } = req;
-  const { id } = req.params;
-
-  try {
-    await offeringsService.createEnrollment({ userId, offeringId: parseInt(id) });
-    return res.sendStatus(httpStatus.CREATED);
-  } catch (error) {
-    handleRequestError(error, res);
-  }
-}
 export const offeringsController = {
   getAll,
-  postEnrollment,
 };
