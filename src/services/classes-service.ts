@@ -1,4 +1,4 @@
-import { notFoundError } from "@/errors";
+import { conflictError, notFoundError } from "@/errors";
 import { classesRepository, enrollmentsRepository } from "@/repositories";
 
 async function findAll() {
@@ -17,12 +17,16 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
 
 async function createClasseEnroll({ id, userId }: { id: number; userId: number }) {
   const classe = await classesRepository.findById(id);
-
   if (!classe) {
-    throw notFoundError();
+    throw notFoundError("Turma não encontrada");
   }
 
-  await enrollmentsRepository.createEnrollment({ classeId: id, userId });
+  const userEnrollmentForThisClasse = await enrollmentsRepository.findByUserIdAndClasseId({ userId, classeId: id });
+  if (userEnrollmentForThisClasse) {
+    throw conflictError("Usuário já  inscrito para esta turma");
+  }
+
+  await enrollmentsRepository.createEnrollment({ userId, classeId: id });
   return;
 }
 

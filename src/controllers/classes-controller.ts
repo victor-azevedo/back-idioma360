@@ -31,7 +31,7 @@ async function postClasseEnroll(req: AuthenticatedRequest, res: Response) {
 
   try {
     await classesService.createClasseEnroll({ id: parseInt(id), userId });
-    return res.status(httpStatus.CREATED);
+    return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     handleRequestError(error, res);
   }
