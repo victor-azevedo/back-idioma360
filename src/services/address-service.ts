@@ -1,6 +1,6 @@
 import { badRequestError, conflictError, notFoundError } from "@/errors";
 import { isValidCEP, isValidCityId, userAlreadyHaveAddress } from "@/helpers";
-import { addressRepository, usersRepository } from "@/repositories";
+import { addressRepository } from "@/repositories";
 import { AddressBody } from "@/schemas";
 import { StateUF } from "@prisma/client";
 
@@ -23,13 +23,13 @@ async function createUserAddress(userId: number, userAddressBody: AddressBody) {
 }
 
 async function findUserAddress(userId: number) {
-  const { address } = await usersRepository.findUserAddress(userId);
+  const userAddress = await addressRepository.findUserAddress(userId);
 
-  if (!address) {
+  if (!userAddress) {
     throw notFoundError();
   }
 
-  return address;
+  return userAddress;
 }
 
 async function findStates() {
