@@ -18,8 +18,20 @@ async function getClasseById(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
 
   try {
-    const classe = await classesService.findById({ id: parseInt(id), userId });
+    const classe = await classesService.findClasseByIdWithUserEnrollment({ id: parseInt(id), userId });
     return res.status(httpStatus.OK).send(classe);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
+async function postClasseEnroll(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params;
+  const { userId } = req;
+
+  try {
+    await classesService.createClasseEnroll({ id: parseInt(id), userId });
+    return res.status(httpStatus.CREATED);
   } catch (error) {
     handleRequestError(error, res);
   }
@@ -28,4 +40,5 @@ async function getClasseById(req: AuthenticatedRequest, res: Response) {
 export const classesController = {
   getAll,
   getClasseById,
+  postClasseEnroll,
 };

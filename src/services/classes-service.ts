@@ -1,12 +1,12 @@
 import { notFoundError } from "@/errors";
-import { classesRepository } from "@/repositories";
+import { classesRepository, enrollmentsRepository } from "@/repositories";
 
 async function findAll() {
   return await classesRepository.findAll();
 }
 
-async function findById({ id, userId }: { id: number; userId: number }) {
-  const classe = await classesRepository.findById({ id, userId });
+async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; userId: number }) {
+  const classe = await classesRepository.findClasseByIdWithUserEnrollment({ id, userId });
 
   if (!classe) {
     throw notFoundError();
@@ -15,7 +15,19 @@ async function findById({ id, userId }: { id: number; userId: number }) {
   return classe;
 }
 
+async function createClasseEnroll({ id, userId }: { id: number; userId: number }) {
+  const classe = await classesRepository.findById(id);
+
+  if (!classe) {
+    throw notFoundError();
+  }
+
+  await enrollmentsRepository.createEnrollment({ classeId: id, userId });
+  return;
+}
+
 export const classesService = {
   findAll,
-  findById,
+  findClasseByIdWithUserEnrollment,
+  createClasseEnroll,
 };

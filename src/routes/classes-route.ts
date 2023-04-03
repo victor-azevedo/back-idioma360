@@ -8,5 +8,6 @@ const classesRouter = Router();
 classesRouter.use(authenticateToken);
 classesRouter.get("/", classesController.getAll);
 classesRouter.get("/:id", validateParams(paramsSchema), classesController.getClasseById);
+classesRouter.post("/:id/enrollment", validateParams(paramsSchema), classesController.postClasseEnroll);
 
 export { classesRouter };
