@@ -187,17 +187,23 @@ async function main() {
 
   const tests = await prisma.test.findMany();
   if (tests.length === 0) {
-    const classes = await prisma.classe.findMany({ select: { id: true } });
+    const classes = await prisma.classe.findMany({
+      distinct: ["courseId"],
+      select: { id: true, course: { select: { id: true, name: true } } },
+    });
     if (classes) {
       classes.forEach(async (classe) => {
         const { id } = await prisma.test.create({
           data: {
-            classeId: classe.id,
+            name: `Teste para ${classe.course?.name}`,
           },
         });
+
         await prisma.question.createMany({
           data: testGenerate(id, 5),
         });
+
+        await prisma.classe.updateMany({ where: { courseId: classe.course?.id }, data: { testId: id } });
       });
     }
   }

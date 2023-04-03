@@ -123,22 +123,23 @@ model Classe {
   startDate   DateTime
   endDate     DateTime
   vacancies   Int
-  offeringId  Int?
   courseId    Int
+  offeringId  Int?
+  testId      Int?
   enrollments Enrollment[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   course      Course?      @relation(fields: [courseId], references: [id])
   offering    Offering?    @relation(fields: [offeringId], references: [id])
-  Test        Test?
+  test        Test?        @relation(fields: [testId], references: [id])
 
   @@map("classes")
 }
 
 model Test {
   id        Int        @id @default(autoincrement())
-  classeId  Int        @unique
-  classe    Classe     @relation(fields: [classeId], references: [id])
+  name      String
+  classe    Classe[]
   questions Question[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
