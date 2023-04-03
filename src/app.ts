@@ -1,5 +1,5 @@
 import { prismaConnectDB, prismaDisconnectDB, redisConnect } from "@/config";
-import { addressRouter, authRouter, classesRouter, coursesRouter, offeringsRouter } from "@/routes";
+import { addressRouter, authRouter, classesRouter, coursesRouter, offeringsRouter, testsRouter } from "@/routes";
 import cors from "cors";
 import express, { Express } from "express";
 import "express-async-errors";
@@ -14,7 +14,8 @@ app
   .use("/address", addressRouter)
   .use("/offerings", offeringsRouter)
   .use("/classes", classesRouter)
-  .use("/courses", coursesRouter);
+  .use("/courses", coursesRouter)
+  .use("/tests", testsRouter);
 
 export function init(): Promise<Express> {
   redisConnect();
