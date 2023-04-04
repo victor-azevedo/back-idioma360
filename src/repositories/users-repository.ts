@@ -14,8 +14,13 @@ async function findUserById(id: number) {
   return await prisma.user.findUnique({ where: { id } });
 }
 
+async function findUserData(id: number, includeAddress: boolean) {
+  return await prisma.user.findUnique({ where: { id }, include: { address: includeAddress } });
+}
+
 export const usersRepository = {
   findDuplicatedUser,
   findUserByEmail,
   findUserById,
+  findUserData,
 };

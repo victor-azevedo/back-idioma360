@@ -71,7 +71,7 @@ async function createSession(userId: number, role: RolesTypes) {
   return token;
 }
 
-export const usersService = {
+export const authService = {
   signUpStudent,
   signIn,
 };

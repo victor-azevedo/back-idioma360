@@ -5,3 +5,4 @@ export * from "./courses-controller";
 export * from "./enrollments-controller";
 export * from "./offerings-controller";
 export * from "./tests-controller";
+export * from "./users-controller";

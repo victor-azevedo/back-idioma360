@@ -7,6 +7,7 @@ import {
   enrollmentsRouter,
   offeringsRouter,
   testsRouter,
+  usersRouter,
 } from "@/routes";
 import cors from "cors";
 import express, { Express } from "express";
@@ -24,7 +25,8 @@ app
   .use("/courses", coursesRouter)
   .use("/enroll", enrollmentsRouter)
   .use("/offerings", offeringsRouter)
-  .use("/tests", testsRouter);
+  .use("/tests", testsRouter)
+  .use("/users", usersRouter);
 
 export function init(): Promise<Express> {
   redisConnect();
