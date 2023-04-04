@@ -15,7 +15,16 @@ async function findUserById(id: number) {
 }
 
 async function findUserData(id: number, includeAddress: boolean) {
-  return await prisma.user.findUnique({ where: { id }, include: { address: includeAddress } });
+  const query = {
+    where: { id },
+    include: { address: { include: { city: { select: { name: true, state: { select: { uf: true } } } } } } },
+  };
+
+  if (!includeAddress) {
+    delete query.include;
+  }
+
+  return await prisma.user.findUnique(query);
 }
 
 export const usersRepository = {
