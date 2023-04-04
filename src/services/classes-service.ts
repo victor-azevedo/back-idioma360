@@ -1,5 +1,6 @@
 import { conflictError, notFoundError } from "@/errors";
 import { classesRepository, enrollmentsRepository } from "@/repositories";
+import { Classe, Course, Offering } from "@prisma/client";
 
 async function findAll() {
   return await classesRepository.findAll();
@@ -12,7 +13,14 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
     throw notFoundError();
   }
 
-  return classe;
+  const classeResponse: ClasseResponse = {
+    ...classe,
+    course: { ...classe.course },
+    offerings: { ...classe.offering },
+    isUserEnrolledFOrThisClasse: classe.enrollments.length > 0 ? true : false,
+  };
+
+  return classeResponse;
 }
 
 async function createClasseEnroll({ id, userId }: { id: number; userId: number }) {
@@ -34,4 +42,10 @@ export const classesService = {
   findAll,
   findClasseByIdWithUserEnrollment,
   createClasseEnroll,
+};
+
+type ClasseResponse = Classe & {
+  course: Course;
+  offerings: Offering;
+  isUserEnrolledFOrThisClasse: boolean;
 };
