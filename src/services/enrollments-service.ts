@@ -21,6 +21,12 @@ async function createEnrollment({ userId, classeId }: Pick<Enrollment, "userId" 
 
   return await enrollmentsRepository.createEnrollment({ userId, classeId });
 }
+
+async function findUserEnrolls({ userId }: Pick<Enrollment, "userId">) {
+  return await enrollmentsRepository.findUserEnrolls({ userId });
+}
+
 export const enrollmentsService = {
   createEnrollment,
+  findUserEnrolls,
 };
