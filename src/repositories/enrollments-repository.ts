@@ -1,12 +1,12 @@
 import { prisma } from "@/config";
-import { Prisma } from "@prisma/client";
+import { Enrollment } from "@prisma/client";
 
-async function findByUserIdAndClasseId({ userId, classeId }: Prisma.EnrollmentCreateManyInput) {
+async function findByUserIdAndClasseId({ userId, classeId }: Pick<Enrollment, "userId" | "classeId">) {
   return await prisma.enrollment.findFirst({ where: { userId, AND: { classeId } }, select: { id: true } });
 }
 
-async function createEnrollment({ userId, classeId }: Prisma.EnrollmentCreateManyInput) {
-  await prisma.enrollment.create({ data: { userId, classeId } });
+async function createEnrollment(data: Pick<Enrollment, "userId" | "classeId">) {
+  await prisma.enrollment.create({ data });
 }
 
 export const enrollmentsRepository = {

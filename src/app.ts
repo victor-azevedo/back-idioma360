@@ -1,5 +1,13 @@
 import { prismaConnectDB, prismaDisconnectDB, redisConnect } from "@/config";
-import { addressRouter, authRouter, classesRouter, coursesRouter, offeringsRouter, testsRouter } from "@/routes";
+import {
+  addressRouter,
+  authRouter,
+  classesRouter,
+  coursesRouter,
+  enrollmentsRouter,
+  offeringsRouter,
+  testsRouter,
+} from "@/routes";
 import cors from "cors";
 import express, { Express } from "express";
 import "express-async-errors";
@@ -12,9 +20,10 @@ app
   .get("/health", (_req, res) => res.send("OK!"))
   .use("/auth", authRouter)
   .use("/address", addressRouter)
-  .use("/offerings", offeringsRouter)
   .use("/classes", classesRouter)
   .use("/courses", coursesRouter)
+  .use("/enroll", enrollmentsRouter)
+  .use("/offerings", offeringsRouter)
   .use("/tests", testsRouter);
 
 export function init(): Promise<Express> {

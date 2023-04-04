@@ -1,5 +1,5 @@
-import { conflictError, notFoundError } from "@/errors";
-import { classesRepository, enrollmentsRepository } from "@/repositories";
+import { notFoundError } from "@/errors";
+import { classesRepository } from "@/repositories";
 import { Classe, Course, Offering } from "@prisma/client";
 
 async function findAll() {
@@ -23,25 +23,9 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
   return classeResponse;
 }
 
-async function createClasseEnroll({ id, userId }: { id: number; userId: number }) {
-  const classe = await classesRepository.findById(id);
-  if (!classe) {
-    throw notFoundError("Turma não encontrada");
-  }
-
-  const userEnrollmentForThisClasse = await enrollmentsRepository.findByUserIdAndClasseId({ userId, classeId: id });
-  if (userEnrollmentForThisClasse) {
-    throw conflictError("Usuário já  inscrito para esta turma");
-  }
-
-  await enrollmentsRepository.createEnrollment({ userId, classeId: id });
-  return;
-}
-
 export const classesService = {
   findAll,
   findClasseByIdWithUserEnrollment,
-  createClasseEnroll,
 };
 
 type ClasseResponse = Classe & {

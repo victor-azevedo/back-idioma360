@@ -25,20 +25,7 @@ async function getClasseById(req: AuthenticatedRequest, res: Response) {
   }
 }
 
-async function postClasseEnroll(req: AuthenticatedRequest, res: Response) {
-  const { id } = req.params;
-  const { userId } = req;
-
-  try {
-    await classesService.createClasseEnroll({ id: parseInt(id), userId });
-    return res.sendStatus(httpStatus.CREATED);
-  } catch (error) {
-    handleRequestError(error, res);
-  }
-}
-
 export const classesController = {
   getAll,
   getClasseById,
-  postClasseEnroll,
 };
