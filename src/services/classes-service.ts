@@ -1,6 +1,5 @@
 import { notFoundError } from "@/errors";
 import { classesRepository } from "@/repositories";
-import { Classe, Course, Offering } from "@prisma/client";
 
 async function findAll() {
   return await classesRepository.findAll();
@@ -13,11 +12,10 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
     throw notFoundError();
   }
 
-  const classeResponse: ClasseResponse = {
-    ...classe,
-    course: { ...classe.course },
-    offerings: { ...classe.offering },
-    isUserEnrolledFOrThisClasse: classe.enrollments.length > 0 ? true : false,
+  const { enrollments, ...classeWithOutEnrollments } = classe;
+  const classeResponse = {
+    ...classeWithOutEnrollments,
+    isUserEnrolledFOrThisClasse: enrollments.length > 0 ? true : false,
   };
 
   return classeResponse;
@@ -26,10 +24,4 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
 export const classesService = {
   findAll,
   findClasseByIdWithUserEnrollment,
-};
-
-type ClasseResponse = Classe & {
-  course: Course;
-  offerings: Offering;
-  isUserEnrolledFOrThisClasse: boolean;
 };
