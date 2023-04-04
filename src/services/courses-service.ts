@@ -6,11 +6,11 @@ async function findAll() {
 }
 
 async function findAllGroupByCourse(status: OfferStatus) {
-  if (status === "open" || status === "closed") {
+  if (status !== "blocked") {
     return await coursesRepository.findAllWithClassesFilteredOfferStatus(status);
   }
 
-  return await coursesRepository.findAllWithClasses();
+  return [];
 }
 
 export const coursesService = {

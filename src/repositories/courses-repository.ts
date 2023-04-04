@@ -1,20 +1,43 @@
 import { prisma } from "@/config";
-import { OfferStatus } from "@prisma/client";
+import { OfferStatus, Prisma } from "@prisma/client";
 
 async function findAll() {
   return await prisma.course.findMany();
 }
 
 async function findAllWithClassesFilteredOfferStatus(status: OfferStatus) {
-  return await prisma.course.findMany({ select: { name: true, classes: { where: { offering: { status } } } } });
-}
+  const sortAsc: Prisma.SortOrder = "asc";
+  const query = {
+    select: {
+      id: true,
+      name: true,
+      imageUrl: true,
+      classes: {
+        orderBy: { startDate: sortAsc },
+        where: { offering: { status } },
+        select: {
+          id: true,
+          name: true,
+          days: true,
+          vacancies: true,
+          startDate: true,
+          endDate: true,
+          startTime: true,
+          endTime: true,
+          offering: { select: { status: true } },
+        },
+      },
+    },
+  };
 
-async function findAllWithClasses() {
-  return await prisma.course.findMany({ select: { name: true, classes: true } });
+  if (!status) {
+    delete query.select.classes.where;
+  }
+
+  return await prisma.course.findMany(query);
 }
 
 export const coursesRepository = {
   findAll,
   findAllWithClassesFilteredOfferStatus,
-  findAllWithClasses,
 };
