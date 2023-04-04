@@ -10,7 +10,10 @@ async function createEnrollment(data: Pick<Enrollment, "userId" | "classeId">) {
 }
 
 async function findUserEnrolls({ userId }: Pick<Enrollment, "userId">) {
-  return await prisma.enrollment.findMany({ where: { userId }, include: { classe: true } });
+  return await prisma.enrollment.findMany({
+    where: { userId },
+    include: { classe: { include: { offering: { select: { testDate: true } } } } },
+  });
 }
 
 export const enrollmentsRepository = {
