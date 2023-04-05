@@ -24,6 +24,7 @@ model User {
   enrollments  Enrollment[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  UserAnswers  UserAnswers[]
 
   @@map("users")
 }
@@ -148,19 +149,29 @@ model Test {
 }
 
 model Question {
-  id            Int      @id @default(autoincrement())
-  title         String   @db.Text
-  optionA       String   @db.Text
-  optionB       String   @db.Text
-  optionC       String   @db.Text
-  optionD       String   @db.Text
+  id            Int           @id @default(autoincrement())
+  title         String        @db.Text
+  optionA       String        @db.Text
+  optionB       String        @db.Text
+  optionC       String        @db.Text
+  optionD       String        @db.Text
   correctAnswer Options
   testId        Int
-  test          Test     @relation(fields: [testId], references: [id])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  userAnswers   UserAnswers[]
+  test          Test          @relation(fields: [testId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   @@map("questions")
+}
+
+model UserAnswers {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  questionId Int
+  userAnswer Options
+  questions  Question @relation(fields: [questionId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Course {
