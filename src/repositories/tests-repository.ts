@@ -2,7 +2,7 @@ import { prisma } from "@/config";
 import { Prisma } from "@prisma/client";
 
 async function findAll() {
-  return await prisma.test.findMany({ include: { questions: true } });
+  return await prisma.test.findMany({ orderBy: { id: "asc" }, include: { questions: { orderBy: { id: "asc" } } } });
 }
 
 async function findTestQuestionsByTestId(id: number) {
@@ -10,7 +10,10 @@ async function findTestQuestionsByTestId(id: number) {
     where: { id },
     select: {
       name: true,
-      questions: { select: { id: true, title: true, optionA: true, optionB: true, optionC: true, optionD: true } },
+      questions: {
+        orderBy: { id: "asc" },
+        select: { id: true, title: true, optionA: true, optionB: true, optionC: true, optionD: true },
+      },
     },
   });
 }
