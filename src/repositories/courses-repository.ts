@@ -2,12 +2,13 @@ import { prisma } from "@/config";
 import { OfferStatus, Prisma } from "@prisma/client";
 
 async function findAll() {
-  return await prisma.course.findMany();
+  return await prisma.course.findMany({ orderBy: { name: "asc" } });
 }
 
 async function findAllWithClassesFilteredOfferStatus(status: OfferStatus) {
   const sortAsc: Prisma.SortOrder = "asc";
   const query = {
+    orderBy: { name: sortAsc },
     select: {
       id: true,
       name: true,
