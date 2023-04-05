@@ -5,9 +5,9 @@ async function findAll() {
   return await prisma.test.findMany({ orderBy: { id: "asc" }, include: { questions: { orderBy: { id: "asc" } } } });
 }
 
-async function findTestQuestionsByTestId(id: number) {
-  return await prisma.test.findUnique({
-    where: { id },
+async function findTestQuestionsByTestIdForThisUser({ testId, userId }: { testId: number; userId: number }) {
+  return await prisma.test.findFirst({
+    where: { id: testId, AND: { classe: { some: { enrollments: { some: { userId } } } } } },
     select: {
       name: true,
       questions: {
@@ -34,7 +34,7 @@ async function createUserAnswers(data: Prisma.UserAnswersCreateManyInput[]) {
 
 export const testsRepository = {
   findAll,
-  findTestQuestionsByTestId,
+  findTestQuestionsByTestIdForThisUser,
   findFullTestByTestIdForThisUser,
   createUserAnswers,
 };

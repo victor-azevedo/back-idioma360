@@ -2,7 +2,7 @@ import { conflictError, forbiddenError } from "@/errors";
 import { UserAnswersBody } from "@/schemas/userAnswer-schema";
 import { Question, Test, UserAnswers } from "@prisma/client";
 
-export function isEnrolledUserForThisTestOrError(test: UserTestId) {
+export function isEnrolledUserForThisTestOrError<T>(test: T) {
   const isEnrolledUserForThisTest = test ? true : false;
   if (!isEnrolledUserForThisTest) {
     throw forbiddenError("Não permitido. Usuário não inscrito para este teste");

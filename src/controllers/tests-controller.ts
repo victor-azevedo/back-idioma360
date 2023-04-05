@@ -15,10 +15,11 @@ async function getAll(req: AuthenticatedRequest, res: Response) {
 }
 
 async function getByTestId(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
   const { id } = req.params;
 
   try {
-    const tests = await testsService.findByTestId(parseInt(id));
+    const tests = await testsService.findByTestId({ testId: parseInt(id), userId });
     return res.status(httpStatus.OK).send(tests);
   } catch (error) {
     handleRequestError(error, res);

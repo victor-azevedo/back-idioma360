@@ -11,8 +11,15 @@ async function findAll() {
   return await testsRepository.findAll();
 }
 
-async function findByTestId(id: number) {
-  return await testsRepository.findTestQuestionsByTestId(id);
+async function findByTestId({ testId, userId }: { testId: number; userId: number }) {
+  const testToAnswer = await testsRepository.findTestQuestionsByTestIdForThisUser({ testId, userId });
+
+  isEnrolledUserForThisTestOrError(testToAnswer);
+
+  const userAnswersInDB = await usersRepository.findUserTestAnswers({ userId, testId });
+  hasUserNoAnswersForThisTestOrError(userAnswersInDB);
+
+  return testToAnswer;
 }
 
 async function createUserAnswers({ userId, testId, userAnswers }: CreateUserAnswer) {
