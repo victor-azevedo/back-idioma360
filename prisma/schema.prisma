@@ -100,6 +100,7 @@ model Enrollment {
 
 model Offering {
   id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(255)
   startDate     DateTime
   endDate       DateTime
   testDate      DateTime
