@@ -7,5 +7,6 @@ const enrollmentsRouter = Router();
 
 enrollmentsRouter.use(authenticateToken);
 enrollmentsRouter.post("/", validateBody(enrollSchema), enrollmentsController.postEnroll);
+enrollmentsRouter.get("/user", enrollmentsController.getUserEnrolls);
 
 export { enrollmentsRouter };
