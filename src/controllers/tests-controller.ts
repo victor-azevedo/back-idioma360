@@ -1,4 +1,5 @@
 import { AuthenticatedRequest } from "@/middlewares";
+import { UserAnswersBody } from "@/schemas/userAnswer-schema";
 import { testsService } from "@/services";
 import { Response } from "express";
 import httpStatus from "http-status";
@@ -24,7 +25,21 @@ async function getByTestId(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function postUserAnswers(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { id } = req.params;
+  const userAnswers = req.body as UserAnswersBody;
+
+  try {
+    await testsService.createUserAnswers({ userAnswers, userId, testId: parseInt(id) });
+    return res.sendStatus(httpStatus.CREATED);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const testsController = {
   getAll,
   getByTestId,
+  postUserAnswers,
 };

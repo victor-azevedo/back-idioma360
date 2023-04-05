@@ -1,8 +1,8 @@
 import { ApplicationError } from "../protocols";
 
-export function forbiddenError(): ApplicationError {
+export function forbiddenError(message?: string): ApplicationError {
   return {
     name: "ForbiddenError",
-    message: "You are not allowed to continue",
+    message: message || "You are not allowed to continue",
   };
 }

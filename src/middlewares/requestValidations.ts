@@ -2,9 +2,9 @@ import { invalidDataError } from "@/errors";
 
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import { ObjectSchema } from "joi";
+import { AnySchema, ObjectSchema } from "joi";
 
-export function validateBody<T>(schema: ObjectSchema<T>): ValidationMiddleware {
+export function validateBody<T>(schema: AnySchema<T>): ValidationMiddleware {
   return validate(schema, "body");
 }
 
@@ -16,7 +16,7 @@ export function validateQuery<T>(schema: ObjectSchema<T>): ValidationMiddleware 
   return validate(schema, "query");
 }
 
-function validate(schema: ObjectSchema, type: "body" | "params" | "query") {
+function validate(schema: AnySchema, type: "body" | "params" | "query") {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req[type], {
       abortEarly: false,
