@@ -1,7 +1,7 @@
 import { prisma } from "@/config";
 
 async function findAll() {
-  return await prisma.classe.findMany({ include: { course: true, offering: true } });
+  return await prisma.classe.findMany({ orderBy: { startDate: "asc" }, include: { course: true, offering: true } });
 }
 
 async function findById(id: number) {
@@ -11,7 +11,7 @@ async function findById(id: number) {
 async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; userId: number }) {
   return await prisma.classe.findUnique({
     where: { id },
-    include: { course: true, offering: true, enrollments: { where: { userId } } },
+    include: { course: true, offering: true, enrollments: { orderBy: { id: "asc" }, where: { userId } } },
   });
 }
 
