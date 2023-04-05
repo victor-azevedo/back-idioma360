@@ -9,13 +9,11 @@ export const querySchema: ObjectSchema = Joi.object<QuerySchema>({
   offerStatus: Joi.string()
     .valid(...Object.keys(OfferStatus))
     .optional(),
-  enrollments: Joi.boolean().optional(),
   address: Joi.boolean().optional(),
 });
 
 export type QuerySchema = Partial<{
   uf: StateUF;
   offerStatus: OfferStatus;
-  enrollments: string;
   address: string;
 }>;
