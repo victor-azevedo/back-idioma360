@@ -66,6 +66,7 @@ async function main() {
     await prisma.offering.createMany({
       data: [
         {
+          name: "Processo Seletivo 22/01",
           startDate: new Date("2022-03-01T00:00"),
           endDate: new Date("2022-04-01T00:00"),
           testDate: new Date("2022-05-01T00:00"),
@@ -73,15 +74,29 @@ async function main() {
           testEndTime: new Date("2022-05-01T16:30"),
           resultDate: new Date("2022-06-01T00:00"),
           enrollPrice: 15000,
+          status: "closed",
         },
         {
+          name: "Processo Seletivo 23/01",
           startDate: new Date("2023-04-20T00:00"),
           endDate: new Date("2023-05-20T00:00"),
-          testDate: new Date("2023-06-20T00:00"),
-          testStartTime: new Date("2023-05-20T16:00"),
-          testEndTime: new Date("2023-05-20T16:30"),
+          testDate: new Date("2023-04-05T00:00"),
+          testStartTime: new Date("2023-04-05T16:00"),
+          testEndTime: new Date("2023-04-05T16:30"),
           resultDate: new Date("2023-06-20T00:00"),
+          enrollPrice: 19000,
+          status: "open",
+        },
+        {
+          name: "Processo Seletivo 23/02",
+          startDate: new Date("2023-06-20T00:00"),
+          endDate: new Date("2023-07-20T00:00"),
+          testDate: new Date("2023-08-05T00:00"),
+          testStartTime: new Date("2023-08-05T16:00"),
+          testEndTime: new Date("2023-08-05T16:30"),
+          resultDate: new Date("2023-09-18T00:00"),
           enrollPrice: 20000,
+          status: "blocked",
         },
       ],
     });
