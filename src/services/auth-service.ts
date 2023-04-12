@@ -1,10 +1,11 @@
-import { conflictError, notFoundError, unauthorizedError, unprocessableEntityError } from "@/errors";
+import { conflictError, unprocessableEntityError } from "@/errors";
 import { isValidCPF } from "@/helpers";
 import { userSessionsRepository, usersAuthRepository, usersRepository } from "@/repositories";
 import { SignInBody, SignUpBody } from "@/schemas";
-import { RolesTypes } from "@prisma/client";
+import { User, UserAuth } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getUserOrFail, validatePasswordOrFail } from "./validations";
 
 async function signUpStudent(params: SignUpBody) {
   const { password, ...userData } = params;
@@ -47,26 +48,17 @@ async function signIn(params: SignInBody) {
 
   await validatePasswordOrFail(password, userCredentials.userAuth.password);
 
-  const token = await createSession(userCredentials.id, userCredentials.userAuth.role);
+  const token = await createSession(userCredentials);
 
   return token;
 }
 
-async function getUserOrFail(email: string) {
-  const userCredentials = await usersRepository.findUserByEmail(email);
-  if (!userCredentials) throw notFoundError(`Not found ${email}`);
-
-  return userCredentials;
-}
-
-async function validatePasswordOrFail(password: string, userPassword: string) {
-  const isPasswordValid = await bcrypt.compare(password, userPassword);
-  if (!isPasswordValid) throw unauthorizedError("Invalid credentials");
-}
-
-async function createSession(userId: number, role: RolesTypes) {
-  const token = jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXP });
-  await userSessionsRepository.create({ token, userId });
+async function createSession(userCredentials: User & {
+  userAuth: UserAuth;
+}) {
+  const { id, name, userAuth } = userCredentials;
+  const token = jwt.sign({ userId: id, userName: name, role: userAuth.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXP });
+  await userSessionsRepository.create({ token, userId: id });
 
   return token;
 }
