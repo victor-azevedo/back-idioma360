@@ -7,6 +7,7 @@ const offeringsRouter = Router();
 
 offeringsRouter.use(authenticateToken);
 offeringsRouter.get("/", validateQuery(offeringsQuerySchema), offeringsController.getAll);
+
 offeringsRouter.use(authorizationRole);
 offeringsRouter.post("/", validateBody(offeringSchema), offeringsController.createOffer);
 offeringsRouter.patch(

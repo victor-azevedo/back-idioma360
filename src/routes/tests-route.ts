@@ -1,6 +1,6 @@
 import { testsController } from "@/controllers";
-import { authenticateToken, validateBody, validateParams } from "@/middlewares";
-import { paramsSchema } from "@/schemas";
+import { authenticateToken, authorizationRole, validateBody, validateParams } from "@/middlewares";
+import { paramsSchema, testSchema } from "@/schemas";
 import { userAnswerSchema } from "@/schemas/userAnswer-schema";
 import { Router } from "express";
 
@@ -15,5 +15,8 @@ testsRouter.post(
   validateBody(userAnswerSchema),
   testsController.postUserAnswers,
 );
+
+testsRouter.use(authorizationRole);
+testsRouter.post("/", validateBody(testSchema), testsController.createTest);
 
 export { testsRouter };

@@ -24,6 +24,7 @@ async function getAll(req: AuthenticatedRequest, res: Response) {
 
 async function createOffer(req: AuthenticatedRequest, res: Response) {
   const offering = req.body as OfferingBody;
+
   try {
     await offeringsService.createOffer(offering);
     return res.sendStatus(httpStatus.CREATED);

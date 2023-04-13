@@ -1,4 +1,5 @@
 import { AuthenticatedRequest } from "@/middlewares";
+import { TestBody } from "@/schemas";
 import { UserAnswersBody } from "@/schemas/userAnswer-schema";
 import { testsService } from "@/services";
 import { Response } from "express";
@@ -39,8 +40,20 @@ async function postUserAnswers(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function createTest(req: AuthenticatedRequest, res: Response) {
+  const test = req.body as TestBody;
+
+  try {
+    await testsService.createTest(test);
+    return res.sendStatus(httpStatus.CREATED);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const testsController = {
   getAll,
   getByTestId,
   postUserAnswers,
+  createTest,
 };

@@ -1,4 +1,6 @@
-import { testsRepository, usersRepository } from "@/repositories";
+import { handlePrismaError } from "@/errors";
+import { classesRepository, testsRepository, usersRepository } from "@/repositories";
+import { TestBody } from "@/schemas";
 import { UserAnswersBody } from "@/schemas/userAnswer-schema";
 import {
   hasUserNoAnswersForThisTestOrError,
@@ -38,6 +40,19 @@ async function createUserAnswers({ userId, testId, userAnswers }: CreateUserAnsw
   await testsRepository.createUserAnswers(answersToDB);
 }
 
+async function createTest({ name, questions, classeId }: TestBody) {
+  const { id } = await testsRepository.createTest({ name });
+
+  const questionsParsed = questions.map((question) => ({ ...question, testId: id }));
+  await testsRepository.createQuestions(questionsParsed);
+
+  try {
+    await classesRepository.updateClasse({ where: { id: classeId }, data: { testId: id } });
+  } catch (error) {
+    handlePrismaError(error);
+  }
+}
+
 type CreateUserAnswer = {
   userId: number;
   testId: number;
@@ -48,4 +63,5 @@ export const testsService = {
   findAll,
   findByTestId,
   createUserAnswers,
+  createTest,
 };

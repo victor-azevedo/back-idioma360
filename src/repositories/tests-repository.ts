@@ -32,9 +32,19 @@ async function createUserAnswers(data: Prisma.UserAnswersCreateManyInput[]) {
   await prisma.userAnswers.createMany({ data });
 }
 
+async function createTest(data: Prisma.TestCreateInput) {
+  return await prisma.test.create({ data, select: { id: true } });
+}
+
+async function createQuestions(data: Prisma.QuestionCreateManyInput[]) {
+  await prisma.question.createMany({ data });
+}
+
 export const testsRepository = {
   findAll,
   findTestQuestionsByTestIdForThisUser,
   findFullTestByTestIdForThisUser,
   createUserAnswers,
+  createTest,
+  createQuestions,
 };
