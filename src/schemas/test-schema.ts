@@ -8,7 +8,9 @@ const questionsSchema: ArraySchema = Joi.array<QuestionBody[]>().items(
     optionB: Joi.string().required(),
     optionC: Joi.string().required(),
     optionD: Joi.string().required(),
-    correctAnswer: Joi.string().valid(...Object.keys(Options)),
+    correctAnswer: Joi.string()
+      .valid(...Object.keys(Options))
+      .required(),
   }),
 );
 
@@ -19,4 +21,4 @@ export const testSchema: ObjectSchema = Joi.object<TestBody>({
 });
 
 type QuestionBody = Pick<Question, "title" | "optionA" | "optionB" | "optionC" | "optionD" | "correctAnswer">;
-type TestBody = Pick<Test, "name"> & { questions: QuestionBody[]; classeId: number };
+export type TestBody = Pick<Test, "name"> & { questions: QuestionBody[]; classeId: number };
