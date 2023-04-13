@@ -1,5 +1,7 @@
 import { forbiddenError } from "@/errors";
+import { parseDateToDB } from "@/helpers";
 import { offeringsRepository } from "@/repositories";
+import { OfferingBody } from "@/schemas";
 import { OfferStatus } from "@prisma/client";
 
 async function findAll({ userId, includeEnrollments, status }: OfferFindAll) {
@@ -18,6 +20,15 @@ async function findAll({ userId, includeEnrollments, status }: OfferFindAll) {
   return await offeringsRepository.findAll();
 }
 
+async function createOffer(offering: OfferingBody) {
+  const datesParsed = parseDateToDB(offering);
+
+  return await offeringsRepository.createOffer({
+    ...offering,
+    ...datesParsed,
+  });
+}
+
 type OfferFindAll = {
   userId: number;
   includeEnrollments: boolean;
@@ -26,4 +37,5 @@ type OfferFindAll = {
 
 export const offeringsService = {
   findAll,
+  createOffer,
 };

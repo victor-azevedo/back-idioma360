@@ -1,5 +1,5 @@
 import { prisma } from "@/config";
-import { OfferStatus } from "@prisma/client";
+import { OfferStatus, Prisma } from "@prisma/client";
 
 async function findAll() {
   return await prisma.offering.findMany({
@@ -37,8 +37,13 @@ async function findAllFilterStatus(status: OfferStatus) {
   });
 }
 
+async function createOffer(data: Prisma.OfferingCreateInput) {
+  return await prisma.offering.create({ data });
+}
+
 export const offeringsRepository = {
   findAll,
   findAllWithUserEnrollments,
   findAllFilterStatus,
+  createOffer,
 };

@@ -1,5 +1,5 @@
 import { AuthenticatedRequest } from "@/middlewares";
-import { OfferingsQuerySchema } from "@/schemas";
+import { OfferingBody, OfferingsQuerySchema } from "@/schemas";
 import { offeringsService } from "@/services";
 import { Response } from "express";
 import httpStatus from "http-status";
@@ -22,6 +22,17 @@ async function getAll(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function createOffer(req: AuthenticatedRequest, res: Response) {
+  const offering = req.body as OfferingBody;
+  try {
+    await offeringsService.createOffer(offering);
+    return res.sendStatus(httpStatus.CREATED);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const offeringsController = {
   getAll,
+  createOffer,
 };
