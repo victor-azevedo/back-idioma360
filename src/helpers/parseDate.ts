@@ -16,7 +16,7 @@ export function parseDateToDB<T extends Partial<DateOrTimeKeys>>(object: T): T {
   return object;
 }
 
-interface DateOrTimeKeys {
+export interface DateOrTimeKeys {
   birthday: string | Date;
   startDate: string | Date;
   endDate: string | Date;

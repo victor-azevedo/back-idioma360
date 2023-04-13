@@ -1,6 +1,10 @@
 import { prisma } from "@/config";
 import { OfferStatus, Prisma } from "@prisma/client";
 
+async function findById({ id }: Prisma.OfferingWhereUniqueInput) {
+  return await prisma.offering.findUnique({ where: { id } });
+}
+
 async function findAll() {
   return await prisma.offering.findMany({
     include: {
@@ -50,6 +54,7 @@ async function deleteOffer({ id }: Prisma.OfferingWhereUniqueInput) {
 }
 
 export const offeringsRepository = {
+  findById,
   findAll,
   findAllWithUserEnrollments,
   findAllFilterStatus,

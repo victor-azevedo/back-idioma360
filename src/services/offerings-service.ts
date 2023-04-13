@@ -1,8 +1,9 @@
-import { forbiddenError, handlePrismaError } from "@/errors";
+import { forbiddenError, handlePrismaError, notFoundError } from "@/errors";
 import { parseDateToDB } from "@/helpers";
 import { offeringsRepository } from "@/repositories";
 import { OfferingBody } from "@/schemas";
 import { OfferStatus } from "@prisma/client";
+import { validateDatesOrFail } from "./validations";
 
 async function findAll({ userId, includeEnrollments, status }: OfferFindAll) {
   if (includeEnrollments) {
@@ -23,6 +24,8 @@ async function findAll({ userId, includeEnrollments, status }: OfferFindAll) {
 async function createOffer(offering: OfferingBody) {
   const datesParsed = parseDateToDB(offering);
 
+  validateDatesOrFail(datesParsed);
+
   return await offeringsRepository.createOffer({
     ...offering,
     ...datesParsed,
@@ -30,7 +33,14 @@ async function createOffer(offering: OfferingBody) {
 }
 
 async function updateOffer({ id, offering }: { id: number; offering: Partial<OfferingBody> }) {
+  const prevOffering = await offeringsRepository.findById({ id });
+  if (!prevOffering) {
+    throw notFoundError();
+  }
+  const { startDate, endDate, testDate, testStartTime, testEndTime, resultDate } = prevOffering;
+
   const datesParsed = parseDateToDB(offering);
+  validateDatesOrFail({ startDate, endDate, testDate, testStartTime, testEndTime, resultDate, ...datesParsed });
 
   try {
     await offeringsRepository.updateOffer({ where: { id }, data: { ...offering, ...datesParsed } });
