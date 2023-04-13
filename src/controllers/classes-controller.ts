@@ -49,9 +49,21 @@ async function updateClasse(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function deleteClasse(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    await classesService.deleteClasse(parseInt(id));
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const classesController = {
   getAll,
   getClasseById,
   createClasse,
   updateClasse,
+  deleteClasse,
 };

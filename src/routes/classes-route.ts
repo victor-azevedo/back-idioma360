@@ -17,5 +17,6 @@ classesRouter.patch(
   validateBody(classeSchemaPatch),
   classesController.updateClasse,
 );
+classesRouter.delete("/:id", validateParams(paramsSchema), classesController.deleteClasse);
 
 export { classesRouter };

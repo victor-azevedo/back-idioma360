@@ -54,9 +54,20 @@ async function updateClasse({ id, classe }: { id: number; classe: Partial<Classe
   return;
 }
 
+async function deleteClasse(id: number) {
+  try {
+    await classesRepository.deleteClasse({ id });
+  } catch (error) {
+    handlePrismaError(error);
+  }
+
+  return;
+}
+
 export const classesService = {
   findAll,
   findClasseByIdWithUserEnrollment,
   createClasse,
   updateClasse,
+  deleteClasse,
 };

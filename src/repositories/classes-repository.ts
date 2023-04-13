@@ -24,10 +24,15 @@ async function updateClasse({ where, data }: Prisma.ClasseUpdateArgs) {
   return await prisma.classe.update({ where, data });
 }
 
+async function deleteClasse({ id }: Prisma.ClasseWhereUniqueInput) {
+  return await prisma.classe.delete({ where: { id } });
+}
+
 export const classesRepository = {
   findAll,
   findById,
   findClasseByIdWithUserEnrollment,
   createClasse,
   updateClasse,
+  deleteClasse,
 };
