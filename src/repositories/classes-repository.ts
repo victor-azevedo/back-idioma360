@@ -1,4 +1,5 @@
 import { prisma } from "@/config";
+import { Prisma } from "@prisma/client";
 
 async function findAll() {
   return await prisma.classe.findMany({ orderBy: { startDate: "asc" }, include: { course: true, offering: true } });
@@ -15,8 +16,13 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
   });
 }
 
+async function createClasse(data: Prisma.ClasseCreateInput) {
+  return await prisma.classe.create({ data });
+}
+
 export const classesRepository = {
   findAll,
   findById,
   findClasseByIdWithUserEnrollment,
+  createClasse,
 };
