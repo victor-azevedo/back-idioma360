@@ -1,6 +1,6 @@
 import { coursesController } from "@/controllers";
-import { authenticateToken, authorizationRole, validateBody, validateQuery } from "@/middlewares";
-import { courseSchema, querySchema } from "@/schemas";
+import { authenticateToken, authorizationRole, validateBody, validateParams, validateQuery } from "@/middlewares";
+import { courseSchema, courseSchemaPatch, paramsSchema, querySchema } from "@/schemas";
 import { Router } from "express";
 
 const coursesRouter = Router();
@@ -10,5 +10,11 @@ coursesRouter.get("/", coursesController.getAll);
 coursesRouter.get("/classes", validateQuery(querySchema), coursesController.findAllGroupByCourse);
 coursesRouter.use(authorizationRole);
 coursesRouter.post("/", validateBody(courseSchema), coursesController.createCourse);
+coursesRouter.patch(
+  "/:id",
+  validateParams(paramsSchema),
+  validateBody(courseSchemaPatch),
+  coursesController.updateCourse,
+);
 
 export { coursesRouter };

@@ -17,8 +17,14 @@ async function findAllGroupByCourse(status: OfferStatus) {
 async function createCourse(course: CourseBody) {
   return await coursesRepository.createCourse(course);
 }
+
+async function updateCourse({ id, course }: { id: number; course: Partial<CourseBody> }) {
+  return await coursesRepository.updateCourse({ where: { id }, data: course });
+}
+
 export const coursesService = {
   findAll,
   findAllGroupByCourse,
   createCourse,
+  updateCourse,
 };

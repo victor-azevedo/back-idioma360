@@ -42,8 +42,13 @@ async function createCourse(data: Prisma.CourseCreateInput) {
   return await prisma.course.create({ data });
 }
 
+async function updateCourse({ where, data }: Prisma.CourseUpdateArgs) {
+  return await prisma.course.update({ where, data });
+}
+
 export const coursesRepository = {
   findAll,
   findAllWithClassesFilteredOfferStatus,
   createCourse,
+  updateCourse,
 };
