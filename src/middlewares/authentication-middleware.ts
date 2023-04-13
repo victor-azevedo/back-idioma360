@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { unauthorizedError } from "@/errors";
+import { RolesTypes } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import * as jwt from "jsonwebtoken";
@@ -12,7 +13,7 @@ export async function authenticateToken(req: AuthenticatedRequest, res: Response
   if (!token) return generateUnauthorizedResponse(res);
 
   try {
-    const { userId } = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
+    const { userId, role } = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
 
     const userSession = await prisma.userSession.findFirst({
       where: {
@@ -22,6 +23,7 @@ export async function authenticateToken(req: AuthenticatedRequest, res: Response
     if (!userSession) return generateUnauthorizedResponse(res);
 
     req.userId = userId;
+    req.role = role;
     return next();
   } catch (err) {
     return generateUnauthorizedResponse(res);
@@ -34,6 +36,7 @@ function generateUnauthorizedResponse(res: Response) {
 
 export type AuthenticatedRequest = Request & JWTPayload;
 
-type JWTPayload = {
+export type JWTPayload = {
   userId: number;
+  role: RolesTypes;
 };
