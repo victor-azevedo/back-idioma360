@@ -1,5 +1,5 @@
 const DATE_KEYS: (keyof DateOrTimeKeys)[] = ["birthday", "startDate", "endDate", "testDate", "resultDate"];
-const TIME_KEYS: (keyof DateOrTimeKeys)[] = ["testStartTime", "testEndTime"];
+const TIME_KEYS: (keyof DateOrTimeKeys)[] = ["testStartTime", "testEndTime", "startTime", "endTime"];
 
 export function parseDateToDB<T extends Partial<DateOrTimeKeys>>(object: T): T {
   DATE_KEYS.forEach((dateKey) => {
@@ -24,4 +24,6 @@ export interface DateOrTimeKeys {
   resultDate: string | Date;
   testStartTime: string | Date;
   testEndTime: string | Date;
+  startTime: string | Date;
+  endTime: string | Date;
 }
