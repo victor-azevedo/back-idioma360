@@ -44,8 +44,20 @@ async function updateOffer(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function deleteOffer(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    await offeringsService.deleteOffer(parseInt(id));
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const offeringsController = {
   getAll,
   createOffer,
   updateOffer,
+  deleteOffer,
 };

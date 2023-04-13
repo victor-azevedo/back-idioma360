@@ -41,6 +41,16 @@ async function updateOffer({ id, offering }: { id: number; offering: Partial<Off
   return;
 }
 
+async function deleteOffer(id: number) {
+  try {
+    await offeringsRepository.deleteOffer({ id });
+  } catch (error) {
+    handlePrismaError(error);
+  }
+
+  return;
+}
+
 type OfferFindAll = {
   userId: number;
   includeEnrollments: boolean;
@@ -51,4 +61,5 @@ export const offeringsService = {
   findAll,
   createOffer,
   updateOffer,
+  deleteOffer,
 };

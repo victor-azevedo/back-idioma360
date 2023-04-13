@@ -15,5 +15,6 @@ offeringsRouter.patch(
   validateBody(offeringSchemaPatch),
   offeringsController.updateOffer,
 );
+offeringsRouter.delete("/:id", validateParams(paramsSchema), offeringsController.deleteOffer);
 
 export { offeringsRouter };

@@ -45,10 +45,15 @@ async function updateOffer({ where, data }: Prisma.OfferingUpdateArgs) {
   return await prisma.offering.update({ where, data });
 }
 
+async function deleteOffer({ id }: Prisma.OfferingWhereUniqueInput) {
+  return await prisma.offering.delete({ where: { id } });
+}
+
 export const offeringsRepository = {
   findAll,
   findAllWithUserEnrollments,
   findAllFilterStatus,
   createOffer,
   updateOffer,
+  deleteOffer,
 };
