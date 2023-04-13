@@ -16,8 +16,16 @@ async function findUserEnrolls({ userId }: Pick<Enrollment, "userId">) {
   });
 }
 
+async function findUserEnrollSameClasseOffer({ userId, classeId }: Pick<Enrollment, "userId" | "classeId">) {
+  return await prisma.enrollment.findFirst({
+    where: { userId, classe: { offering: { classes: { some: { id: classeId } } } } },
+    select: { id: true },
+  });
+}
+
 export const enrollmentsRepository = {
   findByUserIdAndClasseId,
   createEnrollment,
   findUserEnrolls,
+  findUserEnrollSameClasseOffer,
 };
