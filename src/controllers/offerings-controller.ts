@@ -1,5 +1,5 @@
 import { AuthenticatedRequest } from "@/middlewares";
-import { OfferingBody, OfferingsQuerySchema } from "@/schemas";
+import { OfferingBody, OfferingsQuerySchema, ParamsSchema } from "@/schemas";
 import { offeringsService } from "@/services";
 import { Response } from "express";
 import httpStatus from "http-status";
@@ -32,7 +32,20 @@ async function createOffer(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function updateOffer(req: AuthenticatedRequest, res: Response) {
+  const offering = req.body as OfferingBody;
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    await offeringsService.updateOffer({ id: parseInt(id), offering });
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const offeringsController = {
   getAll,
   createOffer,
+  updateOffer,
 };

@@ -41,9 +41,14 @@ async function createOffer(data: Prisma.OfferingCreateInput) {
   return await prisma.offering.create({ data });
 }
 
+async function updateOffer({ where, data }: Prisma.OfferingUpdateArgs) {
+  return await prisma.offering.update({ where, data });
+}
+
 export const offeringsRepository = {
   findAll,
   findAllWithUserEnrollments,
   findAllFilterStatus,
   createOffer,
+  updateOffer,
 };

@@ -1,6 +1,6 @@
 import { offeringsController } from "@/controllers";
-import { authenticateToken, authorizationRole, validateBody, validateQuery } from "@/middlewares";
-import { offeringSchema, offeringsQuerySchema } from "@/schemas";
+import { authenticateToken, authorizationRole, validateBody, validateParams, validateQuery } from "@/middlewares";
+import { offeringSchema, offeringSchemaPatch, offeringsQuerySchema, paramsSchema } from "@/schemas";
 import { Router } from "express";
 
 const offeringsRouter = Router();
@@ -9,5 +9,11 @@ offeringsRouter.use(authenticateToken);
 offeringsRouter.get("/", validateQuery(offeringsQuerySchema), offeringsController.getAll);
 offeringsRouter.use(authorizationRole);
 offeringsRouter.post("/", validateBody(offeringSchema), offeringsController.createOffer);
+offeringsRouter.patch(
+  "/:id",
+  validateParams(paramsSchema),
+  validateBody(offeringSchemaPatch),
+  offeringsController.updateOffer,
+);
 
 export { offeringsRouter };

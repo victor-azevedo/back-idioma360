@@ -1,4 +1,4 @@
-import { forbiddenError } from "@/errors";
+import { forbiddenError, handlePrismaError } from "@/errors";
 import { parseDateToDB } from "@/helpers";
 import { offeringsRepository } from "@/repositories";
 import { OfferingBody } from "@/schemas";
@@ -29,6 +29,18 @@ async function createOffer(offering: OfferingBody) {
   });
 }
 
+async function updateOffer({ id, offering }: { id: number; offering: Partial<OfferingBody> }) {
+  const datesParsed = parseDateToDB(offering);
+
+  try {
+    await offeringsRepository.updateOffer({ where: { id }, data: { ...offering, ...datesParsed } });
+  } catch (error) {
+    handlePrismaError(error);
+  }
+
+  return;
+}
+
 type OfferFindAll = {
   userId: number;
   includeEnrollments: boolean;
@@ -38,4 +50,5 @@ type OfferFindAll = {
 export const offeringsService = {
   findAll,
   createOffer,
+  updateOffer,
 };
