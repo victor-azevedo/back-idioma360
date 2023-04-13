@@ -1,4 +1,5 @@
 export * from "./address-schema";
+export * from "./course-schema";
 export * from "./enroll-schema";
 export * from "./offerings-schema";
 export * from "./params-schema";

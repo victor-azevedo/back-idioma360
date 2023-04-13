@@ -38,7 +38,12 @@ async function findAllWithClassesFilteredOfferStatus(status: OfferStatus) {
   return await prisma.course.findMany(query);
 }
 
+async function createCourse(data: Prisma.CourseCreateInput) {
+  return await prisma.course.create({ data });
+}
+
 export const coursesRepository = {
   findAll,
   findAllWithClassesFilteredOfferStatus,
+  createCourse,
 };

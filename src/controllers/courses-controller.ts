@@ -1,4 +1,5 @@
 import { AuthenticatedRequest } from "@/middlewares";
+import { CourseBody } from "@/schemas";
 import { coursesService } from "@/services";
 import { OfferStatus } from "@prisma/client";
 import { Response } from "express";
@@ -25,7 +26,17 @@ async function findAllGroupByCourse(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function createCourse(req: AuthenticatedRequest, res: Response) {
+  const course = req.body as CourseBody;
+  try {
+    await coursesService.createCourse(course);
+    return res.sendStatus(httpStatus.CREATED);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
 export const coursesController = {
   getAll,
   findAllGroupByCourse,
+  createCourse,
 };
