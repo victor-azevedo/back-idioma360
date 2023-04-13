@@ -39,6 +39,7 @@ async function createCourse(req: AuthenticatedRequest, res: Response) {
 async function updateCourse(req: AuthenticatedRequest, res: Response) {
   const course = req.body as Partial<CourseBody>;
   const { id } = req.params as ParamsSchema;
+
   try {
     await coursesService.updateCourse({ id: parseInt(id), course });
     return res.sendStatus(httpStatus.NO_CONTENT);

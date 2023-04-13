@@ -36,8 +36,27 @@ async function createClasse(classe: ClasseBody) {
   return;
 }
 
+async function updateClasse({ id, classe }: { id: number; classe: Partial<ClasseBody> }) {
+  const prevClasse = await classesRepository.findById({ id });
+  if (!prevClasse) {
+    throw notFoundError();
+  }
+  const { startDate, endDate, startTime, endTime } = prevClasse;
+
+  const datesParsed = parseDateToDB(classe);
+  validateClasseDatesOrFail({ startDate, endDate, startTime, endTime, ...datesParsed });
+
+  try {
+    await classesRepository.updateClasse({ where: { id }, data: { ...classe, ...datesParsed } });
+  } catch (error) {
+    handlePrismaError(error);
+  }
+  return;
+}
+
 export const classesService = {
   findAll,
   findClasseByIdWithUserEnrollment,
   createClasse,
+  updateClasse,
 };

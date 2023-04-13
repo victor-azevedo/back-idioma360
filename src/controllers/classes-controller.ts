@@ -1,5 +1,5 @@
 import { AuthenticatedRequest } from "@/middlewares";
-import { ClasseBody } from "@/schemas";
+import { ClasseBody, ParamsSchema } from "@/schemas";
 import { classesService } from "@/services";
 import { Response } from "express";
 import httpStatus from "http-status";
@@ -37,8 +37,21 @@ async function createClasse(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function updateClasse(req: AuthenticatedRequest, res: Response) {
+  const classe = req.body as Partial<ClasseBody>;
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    await classesService.updateClasse({ id: parseInt(id), classe });
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const classesController = {
   getAll,
   getClasseById,
   createClasse,
+  updateClasse,
 };
