@@ -1,6 +1,7 @@
 export * from "./bad-request";
 export * from "./conflict-error";
 export * from "./forbidden-error";
+export * from "./handle-prisma-error";
 export * from "./invalid-data-error";
 export * from "./not-found-error";
 export * from "./request-error";
