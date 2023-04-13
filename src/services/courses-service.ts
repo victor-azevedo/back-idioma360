@@ -1,3 +1,4 @@
+import { handlePrismaError } from "@/errors";
 import { coursesRepository } from "@/repositories";
 import { CourseBody } from "@/schemas";
 import { OfferStatus } from "@prisma/client";
@@ -22,9 +23,20 @@ async function updateCourse({ id, course }: { id: number; course: Partial<Course
   return await coursesRepository.updateCourse({ where: { id }, data: course });
 }
 
+async function deleteCourse(id: number) {
+  try {
+    await coursesRepository.deleteCourse({ id });
+  } catch (error) {
+    handlePrismaError(error);
+  }
+
+  return;
+}
+
 export const coursesService = {
   findAll,
   findAllGroupByCourse,
   createCourse,
   updateCourse,
+  deleteCourse,
 };

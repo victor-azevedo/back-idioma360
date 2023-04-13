@@ -47,9 +47,21 @@ async function updateCourse(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function deleteCourse(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    await coursesService.deleteCourse(parseInt(id));
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const coursesController = {
   getAll,
   findAllGroupByCourse,
   createCourse,
   updateCourse,
+  deleteCourse,
 };

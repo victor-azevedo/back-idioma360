@@ -16,5 +16,6 @@ coursesRouter.patch(
   validateBody(courseSchemaPatch),
   coursesController.updateCourse,
 );
+coursesRouter.delete("/:id", validateParams(paramsSchema), coursesController.deleteCourse);
 
 export { coursesRouter };

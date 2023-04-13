@@ -46,9 +46,14 @@ async function updateCourse({ where, data }: Prisma.CourseUpdateArgs) {
   return await prisma.course.update({ where, data });
 }
 
+async function deleteCourse(id: Prisma.CourseWhereUniqueInput) {
+  return await prisma.course.delete({ where: id });
+}
+
 export const coursesRepository = {
   findAll,
   findAllWithClassesFilteredOfferStatus,
   createCourse,
   updateCourse,
+  deleteCourse,
 };
