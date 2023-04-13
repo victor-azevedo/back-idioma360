@@ -20,7 +20,13 @@ async function createCourse(course: CourseBody) {
 }
 
 async function updateCourse({ id, course }: { id: number; course: Partial<CourseBody> }) {
-  return await coursesRepository.updateCourse({ where: { id }, data: course });
+  try {
+    await coursesRepository.updateCourse({ where: { id }, data: course });
+  } catch (error) {
+    handlePrismaError(error);
+  }
+
+  return;
 }
 
 async function deleteCourse(id: number) {
