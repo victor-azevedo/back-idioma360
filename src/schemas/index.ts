@@ -7,3 +7,4 @@ export * from "./params-schema";
 export * from "./queries-schema";
 export * from "./signIn-schema";
 export * from "./signUp-schema";
+export * from "./test-schema";
