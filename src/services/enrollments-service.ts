@@ -3,7 +3,7 @@ import { classesRepository, enrollmentsRepository } from "@/repositories";
 import { Enrollment } from "@prisma/client";
 
 async function createEnrollment({ userId, classeId }: Pick<Enrollment, "userId" | "classeId">) {
-  const classe = await classesRepository.findById(classeId);
+  const classe = await classesRepository.findById({ id: classeId });
   if (!classe) {
     throw notFoundError("Turma não encontrada");
   }

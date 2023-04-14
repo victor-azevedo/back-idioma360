@@ -64,10 +64,17 @@ async function deleteClasse(id: number) {
   return;
 }
 
+async function getClasseResult(id: number) {
+  const classeResult = await classesRepository.getClasseResult({ id });
+
+  return classeResult;
+}
+
 export const classesService = {
   findAll,
   findClasseByIdWithUserEnrollment,
   createClasse,
   updateClasse,
   deleteClasse,
+  getClasseResult,
 };

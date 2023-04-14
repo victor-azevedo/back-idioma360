@@ -60,10 +60,22 @@ async function deleteClasse(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function getClasseResult(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    const classeResult = await classesService.getClasseResult(parseInt(id));
+    return res.status(httpStatus.OK).send(classeResult);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const classesController = {
   getAll,
   getClasseById,
   createClasse,
   updateClasse,
   deleteClasse,
+  getClasseResult,
 };
