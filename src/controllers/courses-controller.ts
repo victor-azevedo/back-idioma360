@@ -59,10 +59,22 @@ async function deleteCourse(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function getCourseById(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    const course = await coursesService.findCourseById(parseInt(id));
+    return res.status(httpStatus.OK).send(course);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const coursesController = {
   getAll,
   findAllGroupByCourse,
   createCourse,
   updateCourse,
   deleteCourse,
+  getCourseById,
 };

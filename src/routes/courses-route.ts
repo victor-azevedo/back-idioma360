@@ -10,6 +10,7 @@ coursesRouter.get("/", coursesController.getAll);
 coursesRouter.get("/classes", validateQuery(querySchema), coursesController.findAllGroupByCourse);
 
 coursesRouter.use(authorizationRole);
+coursesRouter.get("/:id", validateParams(paramsSchema), coursesController.getCourseById);
 coursesRouter.post("/", validateBody(courseSchema), coursesController.createCourse);
 coursesRouter.patch(
   "/:id",

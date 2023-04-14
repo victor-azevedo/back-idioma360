@@ -50,10 +50,15 @@ async function deleteCourse(id: Prisma.CourseWhereUniqueInput) {
   return await prisma.course.delete({ where: id });
 }
 
+async function findCourseById({ id }: Prisma.CourseWhereUniqueInput) {
+  return await prisma.course.findUnique({ where: { id } });
+}
+
 export const coursesRepository = {
   findAll,
   findAllWithClassesFilteredOfferStatus,
   createCourse,
   updateCourse,
   deleteCourse,
+  findCourseById,
 };
