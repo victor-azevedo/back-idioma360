@@ -18,5 +18,6 @@ classesRouter.patch(
   classesController.updateClasse,
 );
 classesRouter.delete("/:id", validateParams(paramsSchema), classesController.deleteClasse);
+classesRouter.get("/:id/result", validateParams(paramsSchema), classesController.getClasseResult);
 
 export { classesRouter };

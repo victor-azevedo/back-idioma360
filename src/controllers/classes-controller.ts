@@ -27,11 +27,11 @@ async function getClasseById(req: AuthenticatedRequest, res: Response) {
 }
 
 async function createClasse(req: AuthenticatedRequest, res: Response) {
-  const classe = req.body as ClasseBody;
+  const classeBody = req.body as ClasseBody;
 
   try {
-    await classesService.createClasse(classe);
-    return res.sendStatus(httpStatus.CREATED);
+    const classeCreated = await classesService.createClasse(classeBody);
+    return res.status(httpStatus.CREATED).send(classeCreated);
   } catch (error) {
     handleRequestError(error, res);
   }
@@ -60,10 +60,22 @@ async function deleteClasse(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function getClasseResult(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    const classeResult = await classesService.getClasseResult(parseInt(id));
+    return res.status(httpStatus.OK).send(classeResult);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 export const classesController = {
   getAll,
   getClasseById,
   createClasse,
   updateClasse,
   deleteClasse,
+  getClasseResult,
 };

@@ -1,4 +1,4 @@
-import { handlePrismaError } from "@/errors";
+import { handlePrismaError, notFoundError } from "@/errors";
 import { coursesRepository } from "@/repositories";
 import { CourseBody } from "@/schemas";
 import { OfferStatus } from "@prisma/client";
@@ -39,10 +39,21 @@ async function deleteCourse(id: number) {
   return;
 }
 
+async function findCourseById(id: number) {
+  const course = await coursesRepository.findCourseById({ id });
+
+  if (!course) {
+    throw notFoundError();
+  }
+
+  return course;
+}
+
 export const coursesService = {
   findAll,
   findAllGroupByCourse,
   createCourse,
   updateCourse,
   deleteCourse,
+  findCourseById,
 };

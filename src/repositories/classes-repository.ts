@@ -17,7 +17,7 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
 }
 
 async function createClasse(data: Prisma.ClasseCreateInput) {
-  return await prisma.classe.create({ data });
+  return await prisma.classe.create({ data, include: { course: true } });
 }
 
 async function updateClasse({ where, data }: Prisma.ClasseUpdateArgs) {
@@ -28,6 +28,20 @@ async function deleteClasse({ id }: Prisma.ClasseWhereUniqueInput) {
   return await prisma.classe.delete({ where: { id } });
 }
 
+async function getClasseResult({ id }: Prisma.ClasseWhereUniqueInput) {
+  const resString = await prisma.$queryRaw`
+    SELECT users."id", users."fullName", COUNT(questions."correctAnswer")::INTEGER as "correctAnswersCount"
+    FROM users
+    JOIN "UserAnswers" ON "UserAnswers"."userId" = users."id"
+    JOIN questions ON questions."id" = "UserAnswers"."questionId"
+    JOIN tests ON tests."id" = questions."testId"
+    JOIN classes ON classes."testId" = tests."id"
+    WHERE questions."correctAnswer" = "UserAnswers"."userAnswer" AND classes."id" = ${id}
+    GROUP BY users."id", users."fullName"
+    ORDER BY "correctAnswersCount" DESC;`;
+  return resString;
+}
+
 export const classesRepository = {
   findAll,
   findById,
@@ -35,4 +49,5 @@ export const classesRepository = {
   createClasse,
   updateClasse,
   deleteClasse,
+  getClasseResult,
 };
