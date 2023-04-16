@@ -27,11 +27,11 @@ async function getClasseById(req: AuthenticatedRequest, res: Response) {
 }
 
 async function createClasse(req: AuthenticatedRequest, res: Response) {
-  const classe = req.body as ClasseBody;
+  const classeBody = req.body as ClasseBody;
 
   try {
-    await classesService.createClasse(classe);
-    return res.sendStatus(httpStatus.CREATED);
+    const classeCreated = await classesService.createClasse(classeBody);
+    return res.status(httpStatus.CREATED).send(classeCreated);
   } catch (error) {
     handleRequestError(error, res);
   }

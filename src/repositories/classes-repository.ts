@@ -17,7 +17,7 @@ async function findClasseByIdWithUserEnrollment({ id, userId }: { id: number; us
 }
 
 async function createClasse(data: Prisma.ClasseCreateInput) {
-  return await prisma.classe.create({ data });
+  return await prisma.classe.create({ data, include: { course: true } });
 }
 
 async function updateClasse({ where, data }: Prisma.ClasseUpdateArgs) {
