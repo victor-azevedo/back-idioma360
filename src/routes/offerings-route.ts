@@ -9,6 +9,7 @@ offeringsRouter.use(authenticateToken);
 offeringsRouter.get("/", validateQuery(offeringsQuerySchema), offeringsController.getAll);
 
 offeringsRouter.use(authorizationRole);
+offeringsRouter.get("/:id", validateParams(paramsSchema), offeringsController.getById);
 offeringsRouter.post("/", validateBody(offeringSchema), offeringsController.createOffer);
 offeringsRouter.patch(
   "/:id",

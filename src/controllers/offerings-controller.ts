@@ -22,12 +22,23 @@ async function getAll(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function getById(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params as ParamsSchema;
+
+  try {
+    const offering = await offeringsService.findById({ id: parseInt(id) });
+    return res.status(httpStatus.OK).send(offering);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 async function createOffer(req: AuthenticatedRequest, res: Response) {
   const offering = req.body as OfferingBody;
 
   try {
-    await offeringsService.createOffer(offering);
-    return res.sendStatus(httpStatus.CREATED);
+    const { id } = await offeringsService.createOffer(offering);
+    return res.status(httpStatus.CREATED).send({ offeringId: id });
   } catch (error) {
     handleRequestError(error, res);
   }
@@ -61,4 +72,5 @@ export const offeringsController = {
   createOffer,
   updateOffer,
   deleteOffer,
+  getById,
 };
