@@ -2,7 +2,7 @@ import { forbiddenError, handlePrismaError, notFoundError } from "@/errors";
 import { parseDateToDB } from "@/helpers";
 import { offeringsRepository } from "@/repositories";
 import { OfferingBody } from "@/schemas";
-import { OfferStatus } from "@prisma/client";
+import { OfferStatus, Prisma } from "@prisma/client";
 import { validateDatesOrFail } from "./validations";
 
 async function findAll({ userId, includeEnrollments, status }: OfferFindAll) {
@@ -19,6 +19,10 @@ async function findAll({ userId, includeEnrollments, status }: OfferFindAll) {
   }
 
   return await offeringsRepository.findAll();
+}
+
+async function findById({ id }: Prisma.OfferingWhereUniqueInput) {
+  return await offeringsRepository.findById({ id });
 }
 
 async function createOffer(offering: OfferingBody) {
@@ -69,6 +73,7 @@ type OfferFindAll = {
 
 export const offeringsService = {
   findAll,
+  findById,
   createOffer,
   updateOffer,
   deleteOffer,
