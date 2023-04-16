@@ -25,6 +25,10 @@ async function findById({ id }: Prisma.OfferingWhereUniqueInput) {
   return await offeringsRepository.findById({ id });
 }
 
+async function findByIdWithClasses({ id }: Prisma.OfferingWhereUniqueInput) {
+  return await offeringsRepository.findByIdWithClasses({ id });
+}
+
 async function createOffer(offering: OfferingBody) {
   const datesParsed = parseDateToDB(offering);
 
@@ -74,6 +78,7 @@ type OfferFindAll = {
 export const offeringsService = {
   findAll,
   findById,
+  findByIdWithClasses,
   createOffer,
   updateOffer,
   deleteOffer,

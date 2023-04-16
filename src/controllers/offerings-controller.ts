@@ -26,7 +26,7 @@ async function getById(req: AuthenticatedRequest, res: Response) {
   const { id } = req.params as ParamsSchema;
 
   try {
-    const offering = await offeringsService.findById({ id: parseInt(id) });
+    const offering = await offeringsService.findByIdWithClasses({ id: parseInt(id) });
     return res.status(httpStatus.OK).send(offering);
   } catch (error) {
     handleRequestError(error, res);

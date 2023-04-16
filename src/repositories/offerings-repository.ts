@@ -5,6 +5,18 @@ async function findById({ id }: Prisma.OfferingWhereUniqueInput) {
   return await prisma.offering.findUnique({ where: { id } });
 }
 
+async function findByIdWithClasses({ id }: Prisma.OfferingWhereUniqueInput) {
+  return await prisma.offering.findUnique({
+    where: { id },
+    include: {
+      classes: {
+        orderBy: { course: { name: "asc" } },
+        include: { course: { select: { id: true, name: true, imageUrl: true } } },
+      },
+    },
+  });
+}
+
 async function findAll() {
   return await prisma.offering.findMany({
     include: {
@@ -55,6 +67,7 @@ async function deleteOffer({ id }: Prisma.OfferingWhereUniqueInput) {
 
 export const offeringsRepository = {
   findById,
+  findByIdWithClasses,
   findAll,
   findAllWithUserEnrollments,
   findAllFilterStatus,
