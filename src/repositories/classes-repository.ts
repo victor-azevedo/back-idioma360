@@ -2,7 +2,17 @@ import { prisma } from "@/config";
 import { Prisma } from "@prisma/client";
 
 async function findAll() {
-  return await prisma.classe.findMany({ orderBy: { startDate: "asc" }, include: { course: true, offering: true } });
+  return await prisma.classe.findMany({
+    where: { offeringId: { gt: 0 } },
+    orderBy: [
+      { offeringId: "desc" },
+      { course: { name: "asc" } },
+      { startDate: "asc" },
+      { startTime: "asc" },
+      { id: "asc" },
+    ],
+    include: { course: true, offering: true },
+  });
 }
 
 async function findById({ id }: Prisma.ClasseWhereUniqueInput) {
