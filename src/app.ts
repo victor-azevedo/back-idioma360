@@ -6,6 +6,7 @@ import {
   coursesRouter,
   enrollmentsRouter,
   offeringsRouter,
+  questionsRouter,
   testsRouter,
   usersRouter,
 } from "@/routes";
@@ -26,6 +27,7 @@ app
   .use("/enroll", enrollmentsRouter)
   .use("/offerings", offeringsRouter)
   .use("/tests", testsRouter)
+  .use("/questions", questionsRouter)
   .use("/users", usersRouter);
 
 export function init(): Promise<Express> {

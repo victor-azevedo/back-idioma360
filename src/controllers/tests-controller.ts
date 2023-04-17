@@ -27,6 +27,17 @@ async function getByTestId(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function getByTestIdAdmin(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params;
+
+  try {
+    const test = await testsService.findByTestIdAdmin(parseInt(id));
+    return res.status(httpStatus.OK).send(test);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 async function postUserAnswers(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const { id } = req.params;
@@ -54,6 +65,7 @@ async function createTest(req: AuthenticatedRequest, res: Response) {
 export const testsController = {
   getAll,
   getByTestId,
+  getByTestIdAdmin,
   postUserAnswers,
   createTest,
 };

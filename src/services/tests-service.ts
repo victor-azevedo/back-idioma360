@@ -23,6 +23,10 @@ async function findByTestId({ testId, userId }: { testId: number; userId: number
   return testToAnswer;
 }
 
+async function findByTestIdAdmin(id: number) {
+  return await testsRepository.findByTestIdAdmin({ id });
+}
+
 async function createUserAnswers({ userId, testId, userAnswers }: CreateUserAnswer) {
   const test = await testsRepository.findFullTestByTestIdForThisUser({ testId, userId });
 
@@ -59,6 +63,7 @@ type CreateUserAnswer = {
 export const testsService = {
   findAll,
   findByTestId,
+  findByTestIdAdmin,
   createUserAnswers,
   createTest,
 };
