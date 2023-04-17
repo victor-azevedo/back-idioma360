@@ -27,6 +27,17 @@ async function getByTestId(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function getByCourseId(req: AuthenticatedRequest, res: Response) {
+  const { id } = req.params;
+
+  try {
+    const tests = await testsService.findByCourseId({ courseId: parseInt(id) });
+    return res.status(httpStatus.OK).send(tests);
+  } catch (error) {
+    handleRequestError(error, res);
+  }
+}
+
 async function getByTestIdAdmin(req: AuthenticatedRequest, res: Response) {
   const { id } = req.params;
 
@@ -64,6 +75,7 @@ async function createTest(req: AuthenticatedRequest, res: Response) {
 
 export const testsController = {
   getAll,
+  getByCourseId,
   getByTestId,
   getByTestIdAdmin,
   postUserAnswers,

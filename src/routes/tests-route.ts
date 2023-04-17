@@ -18,6 +18,7 @@ testsRouter.post(
 testsRouter.use(authorizationRole);
 testsRouter.get("/", testsController.getAll);
 testsRouter.get("/admin/:id", validateParams(paramsSchema), testsController.getByTestIdAdmin);
+testsRouter.get("/courses/:id", validateParams(paramsSchema), testsController.getByCourseId);
 testsRouter.post("/", validateBody(testSchema), testsController.createTest);
 
 export { testsRouter };

@@ -15,6 +15,13 @@ async function findByTestIdAdmin(where: Prisma.TestWhereUniqueInput) {
   });
 }
 
+async function findByCourseId(where: Prisma.TestWhereInput) {
+  return await prisma.test.findMany({
+    where,
+    select: { id: true, name: true },
+  });
+}
+
 async function findTestQuestionsByTestIdForThisUser({ testId, userId }: { testId: number; userId: number }) {
   return await prisma.test.findFirst({
     where: { id: testId, AND: { classe: { some: { enrollments: { some: { userId } } } } } },
@@ -53,6 +60,7 @@ async function createQuestions(data: Prisma.QuestionCreateManyInput[]) {
 export const testsRepository = {
   findAll,
   findByTestIdAdmin,
+  findByCourseId,
   findTestQuestionsByTestIdForThisUser,
   findFullTestByTestIdForThisUser,
   createUserAnswers,

@@ -1,4 +1,4 @@
-import { testsRepository, usersRepository } from "@/repositories";
+import { coursesRepository, testsRepository, usersRepository } from "@/repositories";
 import { TestBody } from "@/schemas";
 import { UserAnswersBody } from "@/schemas/userAnswer-schema";
 import {
@@ -7,6 +7,7 @@ import {
   isOnlyQuestionsForThisTestOrError,
   isTestAnsweredFullyOrError,
 } from "./validations";
+import { notFoundError } from "@/errors";
 
 async function findAll() {
   return await testsRepository.findAll();
@@ -25,6 +26,15 @@ async function findByTestId({ testId, userId }: { testId: number; userId: number
 
 async function findByTestIdAdmin(id: number) {
   return await testsRepository.findByTestIdAdmin({ id });
+}
+
+async function findByCourseId({ courseId }: { courseId: number }) {
+  const isThereCourse = await coursesRepository.findCourseById({ id: courseId });
+  if (!isThereCourse) {
+    throw notFoundError();
+  }
+
+  return await testsRepository.findByCourseId({ courseId });
 }
 
 async function createUserAnswers({ userId, testId, userAnswers }: CreateUserAnswer) {
@@ -63,6 +73,7 @@ type CreateUserAnswer = {
 export const testsService = {
   findAll,
   findByTestId,
+  findByCourseId,
   findByTestIdAdmin,
   createUserAnswers,
   createTest,
