@@ -44,8 +44,8 @@ async function createTest(req: AuthenticatedRequest, res: Response) {
   const test = req.body as TestBody;
 
   try {
-    await testsService.createTest(test);
-    return res.sendStatus(httpStatus.CREATED);
+    const testId = await testsService.createTest(test);
+    return res.status(httpStatus.CREATED).send({ testId });
   } catch (error) {
     handleRequestError(error, res);
   }

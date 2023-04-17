@@ -2,7 +2,10 @@ import { prisma } from "@/config";
 import { Prisma } from "@prisma/client";
 
 async function findAll() {
-  return await prisma.test.findMany({ orderBy: { id: "asc" }, include: { questions: { orderBy: { id: "asc" } } } });
+  return await prisma.test.findMany({
+    orderBy: [{ course: { name: "asc" } }, { name: "asc" }],
+    include: { course: { select: { id: true, name: true, imageUrl: true } }, _count: { select: { questions: true } } },
+  });
 }
 
 async function findTestQuestionsByTestIdForThisUser({ testId, userId }: { testId: number; userId: number }) {
@@ -32,7 +35,7 @@ async function createUserAnswers(data: Prisma.UserAnswersCreateManyInput[]) {
   await prisma.userAnswers.createMany({ data });
 }
 
-async function createTest(data: Prisma.TestCreateInput) {
+async function createTest(data: Prisma.TestCreateManyInput) {
   return await prisma.test.create({ data, select: { id: true } });
 }
 

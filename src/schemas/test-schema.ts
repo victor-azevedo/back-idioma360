@@ -16,9 +16,9 @@ const questionsSchema: ArraySchema = Joi.array<QuestionBody[]>().items(
 
 export const testSchema: ObjectSchema = Joi.object<TestBody>({
   name: Joi.string().min(3).required(),
-  questions: questionsSchema.length(5).required(),
-  classeId: Joi.number().integer().min(0).required().prefs({ convert: false }),
+  questions: questionsSchema.length(5).optional(),
+  courseId: Joi.number().integer().min(0).required().prefs({ convert: false }),
 });
 
 type QuestionBody = Pick<Question, "title" | "optionA" | "optionB" | "optionC" | "optionD" | "correctAnswer">;
-export type TestBody = Pick<Test, "name"> & { questions: QuestionBody[]; classeId: number };
+export type TestBody = Pick<Test, "name"> & { questions?: QuestionBody[]; courseId: number };

@@ -1,5 +1,4 @@
-import { handlePrismaError } from "@/errors";
-import { classesRepository, testsRepository, usersRepository } from "@/repositories";
+import { testsRepository, usersRepository } from "@/repositories";
 import { TestBody } from "@/schemas";
 import { UserAnswersBody } from "@/schemas/userAnswer-schema";
 import {
@@ -40,17 +39,15 @@ async function createUserAnswers({ userId, testId, userAnswers }: CreateUserAnsw
   await testsRepository.createUserAnswers(answersToDB);
 }
 
-async function createTest({ name, questions, classeId }: TestBody) {
-  const { id } = await testsRepository.createTest({ name });
+async function createTest({ name, questions, courseId }: TestBody) {
+  const { id } = await testsRepository.createTest({ name, courseId });
 
-  const questionsParsed = questions.map((question) => ({ ...question, testId: id }));
-  await testsRepository.createQuestions(questionsParsed);
-
-  try {
-    await classesRepository.updateClasse({ where: { id: classeId }, data: { testId: id } });
-  } catch (error) {
-    handlePrismaError(error);
+  if (questions) {
+    const questionsParsed = questions.map((question) => ({ ...question, testId: id }));
+    await testsRepository.createQuestions(questionsParsed);
   }
+
+  return id;
 }
 
 type CreateUserAnswer = {

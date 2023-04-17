@@ -7,7 +7,6 @@ import { Router } from "express";
 const testsRouter = Router();
 
 testsRouter.use(authenticateToken);
-testsRouter.get("/", testsController.getAll);
 testsRouter.get("/:id", validateParams(paramsSchema), testsController.getByTestId);
 testsRouter.post(
   "/:id/userAnswers",
@@ -17,6 +16,7 @@ testsRouter.post(
 );
 
 testsRouter.use(authorizationRole);
+testsRouter.get("/", testsController.getAll);
 testsRouter.post("/", validateBody(testSchema), testsController.createTest);
 
 export { testsRouter };
