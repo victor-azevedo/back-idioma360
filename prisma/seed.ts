@@ -204,13 +204,14 @@ async function main() {
   if (tests.length === 0) {
     const classes = await prisma.classe.findMany({
       distinct: ["courseId"],
-      select: { id: true, course: { select: { id: true, name: true } } },
+      select: { id: true, courseId: true, course: { select: { id: true, name: true } } },
     });
     if (classes) {
       classes.forEach(async (classe) => {
         const { id } = await prisma.test.create({
           data: {
             name: `Teste para ${classe.course?.name}`,
+            courseId: classe.courseId,
           },
         });
 

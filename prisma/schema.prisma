@@ -141,8 +141,10 @@ model Classe {
 model Test {
   id        Int        @id @default(autoincrement())
   name      String
+  courseId  Int
   classe    Classe[]
   questions Question[]
+  course    Course     @relation(fields: [courseId], references: [id])
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -182,6 +184,7 @@ model Course {
   creditHours Int      @db.Integer
   imageUrl    String   @db.Text
   classes     Classe[]
+  Test        Test[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
