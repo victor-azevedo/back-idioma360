@@ -8,27 +8,20 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "outDir": "dist",
-    "rootDirs": [
-      "src",
-      "tests"
-    ],
+    "rootDirs": ["src", "tests"],
     "baseUrl": "src",
     "paths": {
-      "@/*": [
-        "*"
-      ],
+      "@/*": ["*"]
     },
     "plugins": [
       { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
     ]
   },
-  "include": [
-    "src",
-    "tests"
-  ],
+  "include": ["src", "tests"],
   "ts-node": {
     "esm": true,
     "transpileOnly": true,
-    "require": [ "typescript-transform-paths/register" ],
+    "require": ["typescript-transform-paths/register"]
   }
-} 
+}

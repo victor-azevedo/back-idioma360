@@ -4,9 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "prepare": "ts-patch install -s",
     "prebuild": "rm -rf dist",
-    "build": "ttsc -p tsconfig.build.json",
-    "start": "node dist/server.js",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "npm run migration:run && node dist/server.js",
     "migration:run": "prisma migrate deploy",
     "lint": "eslint .",
     "lint:staged": "lint-staged",
@@ -19,7 +20,7 @@
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
     "test:seed": "npm run test:load-envs prisma db seed",
     "test:studio": "npm run test:load-envs prisma studio --port 5556",
-    "dev": "NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
+    "dev": "NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node ./src/server.ts' -e ts",
     "dev:load-envs": "dotenv -e .env.development",
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
@@ -66,9 +67,8 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.2",
-    "ttypescript": "^1.5.13",
-    "typescript": "^5.0.2",
+    "ts-patch": "^2.1.0",
+    "typescript": "^4",
     "typescript-transform-paths": "^3.4.6"
   },
   "dependencies": {
