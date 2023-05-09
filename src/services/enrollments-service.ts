@@ -22,7 +22,6 @@ async function createEnrollment({ userId, classeId }: Pick<Enrollment, "userId" 
     throw conflictError("Usuário já inscrito para esta turma");
   }
 
-  await enrollmentsRepository.createEnrollment({ userId, classeId });
   return await enrollmentsRepository.createEnrollment({ userId, classeId });
 }
 
