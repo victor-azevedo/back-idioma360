@@ -1,4 +1,4 @@
-import { prismaConnectDB, prismaDisconnectDB, redisConnect } from "@/config";
+import { prismaConnectDB, prismaDisconnectDB } from "@/config";
 import {
   addressRouter,
   authRouter,
@@ -31,7 +31,7 @@ app
   .use("/users", usersRouter);
 
 export function init(): Promise<Express> {
-  redisConnect();
+  // TODO: connect Redis
   prismaConnectDB();
   return Promise.resolve(app);
 }

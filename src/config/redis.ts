@@ -7,11 +7,12 @@ export const redis = createClient({
 
 export async function redisConnect() {
   try {
+    const redisConnection = await redis.connect();
     // eslint-disable-next-line no-console
     console.log(chalk.bgBlue("Redis Connection Ok!"));
-    return await redis.connect();
+    return redisConnection;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.log(chalk.bgRed("Redis Connection Error!!!"));
+    console.log(chalk.bgRed("Redis Connection Error!!!\n"), error);
   }
 }
