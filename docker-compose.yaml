@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=idioma360
+    volumes:
+      - pg:/data/db
+
+  node_app:
+    container_name: idioma360_app
+    build: .
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/idioma360?schema=public
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+volumes:
+  pg:
