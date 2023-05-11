@@ -1,3 +1,5 @@
+| [:gb:](README.md) | [:brazil:](README_pt.md) |
+
 # Idioma 360 - Back-end
 
 Back-end for Idioma 360, a language course manager. :earth_americas:
@@ -18,7 +20,8 @@ You can access the front-end repository at [Front-End APP](https://github.com/vi
 
 ## Deploy
 
-You can access the application deploy [here](https://idioma360.vercel.app)
+You can access the application deploy [here](https://idioma360.vercel.app).
+Please note that, as it is a free deployment, there might be a longer loading time when starting the application ⏳. We appreciate your patience 🙏!
 
 ## How to run
 
