@@ -4,7 +4,7 @@
 
 Back-end para o Idioma 360, um gerenciador de cursos de idiomas. :earth_americas:
 
-![Capa](./doc/cover.png)
+![Capa ](/../../../front-idioma360/blob/main/doc/cover.png)
 
 ## Sobre
 
