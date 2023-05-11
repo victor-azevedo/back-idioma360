@@ -4,7 +4,7 @@
 
 Back-end for Idioma 360, a language course manager. :earth_americas:
 
-![Cover ](/../../../../front-idioma360/blob/main/doc/cover.png)
+![Cover ](/../../../front-idioma360/blob/main/doc/cover.png)
 
 ## About
 
