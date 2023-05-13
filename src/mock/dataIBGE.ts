@@ -271,7 +271,6 @@ export const statesIBGE = [
   },
 ];
 
-
 export const citiesIBGE = [
   {
     "id": 5200050,

@@ -27,7 +27,11 @@
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
     "dev:seed": "npm run dev:load-envs prisma db seed",
-    "dev:studio": "npm run dev:load-envs prisma studio --port 5555"
+    "dev:studio": "npm run dev:load-envs prisma studio --port 5555",
+    "production:load-envs": "dotenv -e .env.development",
+    "production:migration:run": "npm run dev:load-envs prisma migrate deploy",
+    "production:seed": "npm run dev:load-envs prisma db seed",
+    "production:studio": "npm run dev:load-envs prisma studio --port 5556"
   },
   "repository": {
     "type": "git",
