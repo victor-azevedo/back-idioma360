@@ -17,6 +17,21 @@ async function findByIdWithClasses({ id }: Prisma.OfferingWhereUniqueInput) {
   });
 }
 
+async function findFirstOpen() {
+  return await prisma.offering.findFirst({
+    where: { status: { equals: "open" } },
+    select: { id: true },
+  });
+}
+
+async function updateTestDate(id: number) {
+  const today = new Date();
+  return await prisma.offering.update({
+    where: { id },
+    data: { endDate: today, testDate: today, resultDate: today },
+  });
+}
+
 async function findAll() {
   return await prisma.offering.findMany({
     include: {
@@ -69,9 +84,11 @@ export const offeringsRepository = {
   findById,
   findByIdWithClasses,
   findAll,
+  findFirstOpen,
   findAllWithUserEnrollments,
   findAllFilterStatus,
   createOffer,
   updateOffer,
   deleteOffer,
+  updateTestDate,
 };

@@ -12,9 +12,11 @@ async function createEnrollment({ userId, classeId }: Pick<Enrollment, "userId" 
     throw badRequestError("Turma não disponível para inscrição");
   }
 
-  const userEnrolledForThisOffer = await enrollmentsRepository.findUserEnrollSameClasseOffer({ userId, classeId });
-  if (userEnrolledForThisOffer) {
-    throw conflictError("Usuário já inscritos para outra turma desta Seleção");
+  if (process.env.PORTFOLIO !== "true") {
+    const userEnrolledForThisOffer = await enrollmentsRepository.findUserEnrollSameClasseOffer({ userId, classeId });
+    if (userEnrolledForThisOffer) {
+      throw conflictError("Usuário já inscritos para outra turma desta Seleção");
+    }
   }
 
   const userEnrollForThisClasse = await enrollmentsRepository.findByUserIdAndClasseId({ userId, classeId });
