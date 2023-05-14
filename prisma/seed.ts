@@ -24,9 +24,9 @@ async function main() {
 
   await createCoursesSeed();
 
-  await createClassesSeed();
-
   await createOfferingsSeed();
+
+  await createClassesSeed();
 
   await createTestsSeed();
 }
