@@ -2,10 +2,10 @@ import { conflictError, unprocessableEntityError } from "@/errors";
 import { isValidCPF } from "@/helpers";
 import { offeringsRepository, userSessionsRepository, usersAuthRepository, usersRepository } from "@/repositories";
 import { SignInBody, SignUpBody } from "@/schemas";
-import { User, UserAuth } from "@prisma/client";
+import { RolesTypes, User, UserAuth } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { getUserOrFail, validatePasswordOrFail } from "./validations";
+import { getUserOrFail, getUserTestEmailOrFail, validatePasswordOrFail } from "./validations";
 
 async function signUpStudent(params: SignUpBody) {
   const { password, ...userData } = params;
@@ -57,6 +57,20 @@ async function signIn(params: SignInBody) {
   return token;
 }
 
+async function signInUserTest(userRole: RolesTypes) {
+  const email = getUserTestEmailOrFail(userRole);
+
+  const userCredentials = await getUserOrFail(email);
+
+  const token = await createSession(userCredentials);
+
+  if (process.env.PORTFOLIO === "true") {
+    await updateOfferingTestDateToPortfolio();
+  }
+
+  return token;
+}
+
 async function createSession(
   userCredentials: User & {
     userAuth: UserAuth;
@@ -74,9 +88,12 @@ async function createSession(
 export const authService = {
   signUpStudent,
   signIn,
+  signInUserTest,
 };
 
 async function updateOfferingTestDateToPortfolio() {
   const openOffering = await offeringsRepository.findFirstOpen();
-  await offeringsRepository.updateTestDate(openOffering.id);
+  if (openOffering) {
+    await offeringsRepository.updateTestDate(openOffering.id);
+  }
 }

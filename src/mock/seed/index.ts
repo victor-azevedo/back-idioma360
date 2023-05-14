@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 
 import { cities, states } from "@/helpers";
-import { prisma } from "../../../prisma/seed";
+import { PrismaClient } from "@prisma/client";
 import {
   EnglishCourseDescription,
   FrenchCourseDescription,
@@ -13,7 +13,7 @@ import germanTest from "../germanQuiz";
 import { adminTest, studentTest } from "../users";
 import { testGenerate } from "./tests";
 
-export async function createStatesSeed() {
+export async function createStatesSeed(prisma: PrismaClient) {
   const allStates = await prisma.state.findMany();
   if (allStates.length === 0) {
     await prisma.state.createMany({
@@ -22,7 +22,7 @@ export async function createStatesSeed() {
   }
 }
 
-export async function createCitiesSeed() {
+export async function createCitiesSeed(prisma: PrismaClient) {
   const allCities = await prisma.city.findMany();
   if (allCities.length === 0) {
     await prisma.city.createMany({
@@ -31,7 +31,7 @@ export async function createCitiesSeed() {
   }
 }
 
-export async function createUsersSeed() {
+export async function createUsersSeed(prisma: PrismaClient) {
   if (process.env.PORTFOLIO === "true") {
     const studentTestFind = await prisma.user.findFirst({
       where: { email: { equals: studentTest.email }, OR: { cpf: { equals: studentTest.cpf } } },
@@ -61,7 +61,7 @@ export async function createUsersSeed() {
   }
 }
 
-export async function createCoursesSeed() {
+export async function createCoursesSeed(prisma: PrismaClient) {
   const allCourses = await prisma.course.findMany();
   if (allCourses.length === 0) {
     await prisma.course.createMany({
@@ -99,7 +99,7 @@ export async function createCoursesSeed() {
   }
 }
 
-export async function createOfferingsSeed() {
+export async function createOfferingsSeed(prisma: PrismaClient) {
   const offerings = await prisma.offering.findMany();
   if (offerings.length === 0) {
     await prisma.offering.createMany({
@@ -142,7 +142,7 @@ export async function createOfferingsSeed() {
   }
 }
 
-export async function createClassesSeed() {
+export async function createClassesSeed(prisma: PrismaClient) {
   const classes = await prisma.classe.findMany();
   if (classes.length === 0) {
     const couses = await prisma.course.findMany();
@@ -242,7 +242,7 @@ export async function createClassesSeed() {
   }
 }
 
-export async function createTestsSeed() {
+export async function createTestsSeed(prisma: PrismaClient) {
   const tests = await prisma.test.findMany();
   if (tests.length === 0) {
     const classes = await prisma.classe.findMany({

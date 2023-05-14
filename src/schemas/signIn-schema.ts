@@ -1,4 +1,4 @@
-import { User, UserAuth } from "@prisma/client";
+import { RolesTypes, User, UserAuth } from "@prisma/client";
 import Joi, { ObjectSchema } from "joi";
 
 export const signInSchema: ObjectSchema = Joi.object<SignInBody>({
@@ -7,3 +7,11 @@ export const signInSchema: ObjectSchema = Joi.object<SignInBody>({
 });
 
 export type SignInBody = Pick<User, "email"> & Pick<UserAuth, "password">;
+
+export const signInUserTestSchema: ObjectSchema = Joi.object<SignInUserTestBody>({
+  userRole: Joi.string()
+    .valid(...Object.values(RolesTypes))
+    .required(),
+});
+
+export type SignInUserTestBody = { userRole: RolesTypes };

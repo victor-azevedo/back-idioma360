@@ -16,19 +16,19 @@ dotenv.config();
 export const prisma = new PrismaClient();
 
 async function main() {
-  await createStatesSeed();
+  await createStatesSeed(prisma);
 
-  await createCitiesSeed();
+  await createCitiesSeed(prisma);
 
-  await createUsersSeed();
+  await createUsersSeed(prisma);
 
-  await createCoursesSeed();
+  await createCoursesSeed(prisma);
 
-  await createOfferingsSeed();
+  await createOfferingsSeed(prisma);
 
-  await createClassesSeed();
+  await createClassesSeed(prisma);
 
-  await createTestsSeed();
+  await createTestsSeed(prisma);
 }
 
 main()

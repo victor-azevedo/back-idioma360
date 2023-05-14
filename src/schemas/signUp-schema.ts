@@ -34,7 +34,9 @@ export const signUpAdminSchema: ObjectSchema = Joi.object<SignUpAdminBody>({
   email: emailSchema.required(),
   phone: phoneSchema.required(),
   password: Joi.string().trim().min(6).max(16).required(),
-  role: Joi.string().valid(Object.keys(RolesTypes).join(",")).required(),
+  role: Joi.string()
+    .valid(...Object.values(RolesTypes))
+    .required(),
 });
 
 export type SignUpBody = Pick<User, "name" | "fullName" | "birthday" | "cpf" | "phone" | "email"> &
